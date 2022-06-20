@@ -46,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onResume() {
         Log.i(TAG, "======================onResume======================");
         super.onResume();
+
     }
 
     @Override

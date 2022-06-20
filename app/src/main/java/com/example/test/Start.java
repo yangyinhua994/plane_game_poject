@@ -53,7 +53,7 @@ public class Start extends TextView {
 
     public Start(Context context) {
         this(context, null);
-        ch.setBase(SystemClock.elapsedRealtime());
+//        ch.setBase(SystemClock.elapsedRealtime());
         StartActivity.setAllData(this);
     }
 
