@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">test</string>
+    <string name="app_name">飞机大战</string>
     <string name="number">你的分数为：</string>
     <string name="restart">重新开始</string>
     <string name="revive">复活</string>

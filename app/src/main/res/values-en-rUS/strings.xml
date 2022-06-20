@@ -11,6 +11,12 @@
     <string name="ranking">ranking</string>
     <string name="randomName">"  Think of one for me "</string>
     <string name="submit">confirm</string>
-    <string name="rankingnumber">fraction</string>
-    <string name="rankingusername">name</string>
+    <string name="ranking_number">fraction</string>
+    <string name="ranking_username">name</string>
+    <string name="unknown_user">unknown user</string>
+    <string name="username_is_long">User name is too long  please re-enter</string>
+    <string name="save_successfully">save successfully</string>
+    <string name="repeat_is_operation">"do not repeat "</string>
+    <string name="quit_game">" 再按一次退出游戏 press again to exit the game "</string>
+    <string name="destroy_enemy_plane">destroy an aircraft</string>
 </resources>

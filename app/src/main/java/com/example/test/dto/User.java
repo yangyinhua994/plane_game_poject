@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.dto;
 
 import android.annotation.SuppressLint;
 
@@ -53,20 +53,13 @@ public class User {
         this.time = time;
     }
 
-    @NonNull
     @Override
     public String toString() {
-        String data = "";
-        if (ranking == 1){
-            data = "      排名       用户名      分数        时间" + "\n" + "\n";
-        }
-        data += "        " + getRanking() + "         "+getUsername()+"   " + getNumber() + "            " +getTime();
-        return data;
+        return "User{" +
+                "ranking=" + ranking +
+                ", username='" + username + '\'' +
+                ", number='" + number + '\'' +
+                ", time='" + time + '\'' +
+                '}';
     }
-
-    public String getString(Date date){
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd");
-        return dateFormat.format(date);
-    }
-
 }

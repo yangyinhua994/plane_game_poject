@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,17 +11,21 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Chronometer;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+
+import com.example.test.sqlite.MySQLite;
+import com.example.test.R;
+import com.example.test.activity.MainActivity;
+import com.example.test.activity.StartActivity;
+import com.example.test.dto.Plane;
 
 import java.sql.Date;
 import java.util.Random;
@@ -144,7 +148,7 @@ public class Start extends TextView {
                    }
                }
            }
-           this.setText("已击毁敌机数量：" + index);
+           this.setText(mainActivity.getString(R.string.destroy_enemy_plane) + "：" + index);
            canvas.drawBitmap(my_plane.getBitmap(), my_plane.getX(), my_plane.getY(), paint);
 
        }

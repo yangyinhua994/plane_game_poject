@@ -20,7 +20,9 @@
         <entry key="app/src/main/res/layout/blast.xml" value="0.3458333333333333" />
         <entry key="app/src/main/res/layout/item_main.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/layout/main_activity.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/main_textview.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/layout/numBerTextView.xml" value="0.346875" />
+        <entry key="app/src/main/res/layout/ranking_view.xml" value="0.33" />
         <entry key="app/src/main/res/layout/start.xml" value="0.25" />
         <entry key="app/src/main/res/layout/start_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/test_view_main.xml" value="0.34739583333333335" />

@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,15 +8,14 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.test.R;
+import com.example.test.view.Start;
+
 public class StartActivity extends Activity {
 
     private static boolean save = true;
     private static Start start;
     private String username;
-
-    public static Start getStart() {
-        return start;
-    }
 
     public static void setStart(Start start) {
         StartActivity.start = start;
@@ -46,18 +45,19 @@ public class StartActivity extends Activity {
         });
         Button buttonSave = findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(view -> {
+            String text;
             if (save){
                 save = false;
                 start.save();
-                Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
+                text = this.getString(R.string.save_successfully);
             }else {
-                Toast.makeText(this, "请勿重复操作", Toast.LENGTH_SHORT).show();
+                text = this.getString(R.string.repeat_is_operation);
             }
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
         });
         Button buttonSelect = findViewById(R.id.buttonSelect);
         buttonSelect.setOnClickListener(view -> {
-            startActivity(new Intent(this, ListViewActivity.class));
-            ListViewActivity.setIndex(1);
+            startActivity(new Intent(this, RankingActivity.class));
         });
         Button buttonQuit = findViewById(R.id.buttonQuit);
         buttonQuit.setOnClickListener(v -> {

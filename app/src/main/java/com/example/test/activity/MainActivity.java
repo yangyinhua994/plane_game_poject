@@ -1,8 +1,7 @@
-package com.example.test;
+package com.example.test.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,13 +11,16 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.test.R;
+import com.example.test.view.Start;
+
 public class MainActivity extends AppCompatActivity {
 
     private long time;
     private Start start;
     private boolean save = true;
     public static int mStatus = 0;
-    private int index = 0;
+    private final int index = 0;
     private String username;
 
     public static void setMStatus(int i) {
@@ -52,9 +54,9 @@ public class MainActivity extends AppCompatActivity {
         }else if(getMStatus() == 3 ){
             if (save){
                 start.save();
-                Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, this.getString(R.string.save_successfully), Toast.LENGTH_SHORT).show();
             }else {
-                Toast.makeText(this, "请勿重复操作", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, this.getString(R.string.repeat_is_operation), Toast.LENGTH_SHORT).show();
             }
             save = false;
         }else {
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 exit(); //如果500毫秒内按下两次返回键则退出游戏
             }else{
                 time=t;
-                Toast.makeText(getApplicationContext(),"再按一次退出游戏",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),this.getString(R.string.quit_game),Toast.LENGTH_SHORT).show();
             }
 
             return true;
