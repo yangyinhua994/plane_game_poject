@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.19784172661870503" />
+        <entry key="app/src/main/res/drawable/bg_register.xml" value="0.2205" />
+        <entry key="app/src/main/res/drawable/blast.xml" value="0.267" />
+        <entry key="app/src/main/res/drawable/textview_border.xml" value="0.2205" />
+        <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.18" />
+        <entry key="app/src/main/res/layout-sw600dp/activity_main.xml" value="0.260546875" />
+        <entry key="app/src/main/res/layout/StartTextView.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_rangking.xml" value="0.20416666666666666" />
+        <entry key="app/src/main/res/layout/activity_ranking.xml" value="0.20520833333333333" />
+        <entry key="app/src/main/res/layout/activity_ranking2.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_ranking3.xml" value="0.34739583333333335" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/bg_regitter.xml" value="0.3458333333333333" />
+        <entry key="app/src/main/res/layout/blast.xml" value="0.3458333333333333" />
+        <entry key="app/src/main/res/layout/item_main.xml" value="0.34739583333333335" />
+        <entry key="app/src/main/res/layout/main_activity.xml" value="0.1921875" />
+        <entry key="app/src/main/res/layout/numBerTextView.xml" value="0.346875" />
+        <entry key="app/src/main/res/layout/start.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/start_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/test_view_main.xml" value="0.34739583333333335" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.31567028985507245" />
+      </ProjectState>
+    </option>
+  </component>
+</project>

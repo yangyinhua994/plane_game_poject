@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_view_linearLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+
+    <LinearLayout
+        android:layout_width="353dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="44dp">
+        
+        <TextView
+            android:layout_width="78dp"
+            android:layout_height="59dp"
+            android:gravity="center"
+            android:text="@string/ranking"
+            android:background="@drawable/ranking1"/>
+
+        <TextView
+            android:layout_width="83dp"
+            android:layout_height="59dp"
+            android:layout_marginStart="2dp"
+            android:gravity="center"
+            android:text="@string/rankingnumber"
+            android:background="@drawable/ranking2"/>
+
+        <TextView
+            android:layout_width="191dp"
+            android:layout_height="59dp"
+            android:layout_marginStart="2dp"
+            android:gravity="center"
+            android:text="@string/rankingusername"
+            android:background="@drawable/ranking2"/>
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="353dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginStart="30dp">
+
+        <TextView
+            android:id="@+id/list_view_textview1"
+            android:layout_width="78dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:background="@drawable/ranking4"/>
+
+        <TextView
+            android:id="@+id/list_view_textview2"
+            android:layout_width="83dp"
+            android:layout_height="47dp"
+            android:gravity="center"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/ranking2"/>
+
+        <TextView
+            android:id="@+id/list_view_textview3"
+            android:layout_width="191dp"
+            android:layout_height="47dp"
+            android:gravity="center"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/ranking2"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">test</string>
+    <string name="number">Your score is：</string>
+    <string name="restart">"  restart "</string>
+    <string name="revive">resurrection</string>
+    <string name="save">preservation</string>
+    <string name="quit">"  sign out "</string>
+    <string name="select">"  View ranking "</string>
+    <string name="username">"  Please enter your name "</string>
+    <string name="ranking">ranking</string>
+    <string name="randomName">"  Think of one for me "</string>
+    <string name="submit">confirm</string>
+    <string name="rankingnumber">fraction</string>
+    <string name="rankingusername">name</string>
+</resources>

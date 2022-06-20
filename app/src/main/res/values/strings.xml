@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">test</string>
+    <string name="number">你的分数为：</string>
+    <string name="restart">重新开始</string>
+    <string name="revive">复活</string>
+    <string name="save">保存</string>
+    <string name="quit">退出</string>
+    <string name="select">查看排行</string>
+    <string name="username">请输入你的名字</string>
+    <string name="randomName">帮我想一个</string>
+    <string name="submit">确认</string>
+    <string name="ranking">排名</string>
+    <string name="rankingnumber">分数</string>
+    <string name="rankingusername">名字</string>
+</resources>
