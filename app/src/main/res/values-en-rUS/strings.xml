@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">test</string>
+    <string name="app_name">"  aircraft battle "</string>
     <string name="number">Your score is：</string>
     <string name="restart">"  restart "</string>
     <string name="revive">resurrection</string>
@@ -17,6 +17,8 @@
     <string name="username_is_long">User name is too long  please re-enter</string>
     <string name="save_successfully">save successfully</string>
     <string name="repeat_is_operation">"do not repeat "</string>
-    <string name="quit_game">" 再按一次退出游戏 press again to exit the game "</string>
-    <string name="destroy_enemy_plane">destroy an aircraft</string>
+    <string name="quit_game">"press again to exit the game "</string>
+    <string name="destroy_enemy_plane">fraction</string>
+    <string name="timer">00:00:00</string>
+    <string name="continue_game">continue the game</string>
 </resources>

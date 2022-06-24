@@ -3,6 +3,7 @@ package com.example.test.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,58 +12,90 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Chronometer;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
-import com.example.test.sqlite.MySQLite;
 import com.example.test.R;
 import com.example.test.activity.MainActivity;
 import com.example.test.activity.StartActivity;
 import com.example.test.dto.Plane;
+import com.example.test.sqlite.MySQLite;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.sql.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@SuppressLint("AppCompatCustomView")
+@SuppressLint({"AppCompatCustomView", "ViewConstructor"})
 public class Start extends TextView {
 
     private boolean threadRunState = true;
     private final int multiple = 10;
     private final Paint paint = new Paint();
-    private CopyOnWriteArrayList<Plane> bulletList = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Plane> enemyList = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Plane> blastList = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Plane> bulletList;
+    private CopyOnWriteArrayList<Plane> enemyList;
+    private CopyOnWriteArrayList<Plane> blastList;
     DisplayMetrics dm = getResources().getDisplayMetrics();
     private Plane my_plane;
     private Bitmap bulletBitmap;
     private int index = 0;
-    private MediaPlayer mediaPlayerBack;
     private MediaPlayer mediaPlayerBlast;
     private MediaPlayer mediaPlayerBulletFiring;
     private MediaPlayer mediaPlayerBulletImpact;
-    private Context context;
+    private final Context context;
     MainActivity mainActivity;
     private final String TAG = Start.class.getName();
     private int invincibleTime = 0;
     private String username;
-    private Chronometer ch;
+    private Integer millisecond = 0;
 
-    public Start(Context context) {
-        this(context, null);
-//        ch.setBase(SystemClock.elapsedRealtime());
-        StartActivity.setAllData(this);
+    public Start(Context context, MainActivity mainActivity) {
+        super(context);
+        this.context = context;
+        this.mainActivity = mainActivity;
+        bulletList = new CopyOnWriteArrayList<>();
+        enemyList = new CopyOnWriteArrayList<>();
+        blastList = new CopyOnWriteArrayList<>();
+        my_plane = setMyPlane();
+        init();
+    }
+
+    @SuppressLint("Range")
+    public Start(Context context, MainActivity mainActivity, boolean b) {
+        super(context);
+        this.context = context;
+        this.mainActivity = mainActivity;
+        if (b){
+            Cursor cursor = getCursor(context, "list");
+            if (cursor.moveToNext()){
+                Gson gson = new Gson();
+                Type type = new TypeToken<CopyOnWriteArrayList<Plane>>() {
+                }.getType();
+                bulletList = gson.fromJson(cursor.getString(cursor.getColumnIndex("bulletJson")), type);
+                enemyList = gson.fromJson(cursor.getString(cursor.getColumnIndex("enemyJson")), type);
+                blastList = gson.fromJson(cursor.getString(cursor.getColumnIndex("blastJson")), type);
+                my_plane = gson.fromJson(cursor.getString(cursor.getColumnIndex("myJson")), Plane.class);
+                deleteAllList();
+                init();
+            }
+            cursor.close();
+        }
     }
 
     private void init() {
-        my_plane = setMyPlane();
+        StartActivity.setAllData(this);
+        MediaPlayer mediaPlayerBack = MediaPlayer.create(context, R.raw.back);
+        mediaPlayerBlast = MediaPlayer.create(context, R.raw.blast);
+        mediaPlayerBulletFiring = MediaPlayer.create(context, R.raw.bullet_firing);
+        mediaPlayerBulletImpact = MediaPlayer.create(context, R.raw.bullet_impact);
+        mediaPlayerBack.setLooping(true);
+        mediaPlayerBack.start();
         bulletBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
         setBackgroundColor(Color.parseColor("#000000"));
         setTextColor(Color.parseColor("#ffffff"));
@@ -71,87 +104,77 @@ public class Start extends TextView {
         setOnTouchListener(this::onTouch);
         startThread();
     }
-    
-    public Start(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-        this.context = context;
-    }
-
-    public Start(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        mediaPlayerBack = MediaPlayer.create(context, R.raw.back);
-        mediaPlayerBlast = MediaPlayer.create(context, R.raw.blast);
-        mediaPlayerBulletFiring = MediaPlayer.create(context, R.raw.bullet_firing);
-        mediaPlayerBulletImpact = MediaPlayer.create(context, R.raw.bullet_impact);
-        mediaPlayerBack.setLooping(true);
-        mediaPlayerBack.start();
-        init();
-    }
 
     @SuppressLint({"DrawAllocation", "SetTextI18n"})
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-       if (threadRunState){
-           for (int i = 0; i < bulletList.size(); i++) {
-               Plane plane = bulletList.get(i);
-               mediaPlayerBulletFiring.start();
-               for (int i1 = 0; i1 < enemyList.size(); i1++) {
-                   Plane plane1 = enemyList.get(i1);
-                   boolean flag;
-//                边缘相撞
-//                flag = inRange(plane, plane1);
-//                边缘和在中心相撞
-//                flag = inRange(plane, plane1.getX() + plane1.getBitmap().getWidth() / 2f, plane1.getY() - plane1.getBitmap().getHeight() / 2f);
-                   flag = inRange(plane, plane1.getX(), plane1.getX() + plane1.getBitmap().getWidth(), plane1.getY() - plane1.getBitmap().getHeight() / 2f);
-                   if (flag) {
-                       mediaPlayerBulletImpact.start();
-                       try {
-                           bulletList.remove(i);
-                           enemyList.remove(i1);
-                       }catch (Exception e){
-                           Log.e(TAG, e.toString());
-                       }
-                       if (plane1.getLive() == 1){
-                           plane1.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blast4));
-                           mediaPlayerBlast.start();
-                           blastList.add(plane1);
-                           index++;
-                       }else {
-                           plane1.setLive(plane1.getLive() - 1);
-                           enemyList.add(i1, plane1);
-                       }
-                   }
-               }
-               canvas.drawBitmap(plane.getBitmap(), plane.getX() + my_plane.getBitmap().getWidth() / 2f - 70, plane.getY() + my_plane.getBitmap().getHeight(), paint);
-           }
-           for (Plane plane : blastList) {
-               canvas.drawBitmap(plane.getBitmap(), plane.getX(), plane.getY(), paint);
-           }
-           for (Plane plane : enemyList) {
-               canvas.drawBitmap(plane.getBitmap(), plane.getX(), plane.getY(), paint);
-               if (invincibleTime == 0){
-                   if (inRange(my_plane, plane.getX(), plane.getX() + plane.getBitmap().getWidth(), plane.getY() + plane.getBitmap().getHeight())) {
-                       threadRunState = false;
-                       Intent intent = new Intent(mainActivity, StartActivity.class);
-                       Bundle bundle = new Bundle();
-                       bundle.putString("username", username);
-                       intent.putExtras(bundle);
-                       mainActivity.startActivity(intent);
-                       try {
-                           Thread.sleep(20L * multiple);
-                       } catch (InterruptedException e) {
-                           e.printStackTrace();
-                       }
-                       my_plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blast4));
-                       blastList.add(my_plane);
-                   }
-               }
-           }
-           this.setText(mainActivity.getString(R.string.destroy_enemy_plane) + "：" + index);
-           canvas.drawBitmap(my_plane.getBitmap(), my_plane.getX(), my_plane.getY(), paint);
-
-       }
+        if (threadRunState){
+            for (int i = 0; i < bulletList.size(); i++) {
+                Plane plane = bulletList.get(i);
+                mediaPlayerBulletFiring.start();
+                for (int i1 = 0; i1 < enemyList.size(); i1++) {
+                    Plane plane1 = enemyList.get(i1);
+                    boolean flag;
+                    flag = inRange(plane, plane1.getX(), plane1.getX() + plane1.getBitmap().getWidth(), plane1.getY() - plane1.getBitmap().getHeight() / 2f);
+                    if (flag) {
+                        mediaPlayerBulletImpact.start();
+                        try {
+                            bulletList.remove(i);
+                            enemyList.remove(i1);
+                        }catch (Exception e){
+                            Log.e(TAG, e.toString());
+                        }
+                        if (plane1.getLive() == 1){
+                            plane1.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blast4));
+                            mediaPlayerBlast.start();
+                            blastList.add(plane1);
+                            index++;
+                        }else {
+                            plane1.setLive(plane1.getLive() - 1);
+                            enemyList.add(i1, plane1);
+                        }
+                    }
+                }
+                canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bullet),
+                        plane.getX() + my_plane.getBitmap().getWidth() / 2f - 70,
+                        plane.getY() + my_plane.getBitmap().getHeight(), paint);
+            }
+            for (Plane plane : blastList) {
+                canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blast4), plane.getX(), plane.getY(), paint);
+            }
+            for (Plane plane : enemyList) {
+                if (plane.getBitmapType() == 1){
+                    plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.plan1));
+                }else if (plane.getBitmapType() == 2){
+                    plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.plan2));
+                }else if (plane.getBitmapType() == 3){
+                    plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.plan3));
+                }else{
+                    plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.plan4));
+                }
+                canvas.drawBitmap(plane.getBitmap(), plane.getX(), plane.getY(), paint);
+                if (invincibleTime == 0){
+                    if (inRange(my_plane, plane.getX(), plane.getX() + plane.getBitmap().getWidth(), plane.getY() + plane.getBitmap().getHeight())) {
+                        threadRunState = false;
+                        Intent intent = new Intent(mainActivity, StartActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("username", username);
+                        intent.putExtras(bundle);
+                        mainActivity.startActivity(intent);
+                        try {
+                            Thread.sleep(20L * multiple);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        my_plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blast4));
+                        blastList.add(my_plane);
+                    }
+                }
+            }
+            this.setText(mainActivity.getString(R.string.destroy_enemy_plane) + "：" + index);
+            canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.my_plan), my_plane.getX(), my_plane.getY(), paint);
+        }
     }
 
     public static void sleep(long millis){
@@ -190,7 +213,7 @@ public class Start extends TextView {
     }
 
     public Plane setMyPlane(){
-        return new Plane(dm.widthPixels / 2f, dm.heightPixels - 300, BitmapFactory.decodeResource(getResources(), R.drawable.my_plan));
+        return new Plane(dm.widthPixels / 2f, dm.heightPixels - 300, BitmapFactory.decodeResource(getResources(), R.drawable.my_plan), 0);
     }
 
     public void startThread() {
@@ -198,6 +221,7 @@ public class Start extends TextView {
         new Thread(new MyBullet()).start();
         new Thread(new EnemyPlane()).start();
         new Thread(new Blast()).start();
+        runTimer();
         threadRunState = true;
     }
 
@@ -212,6 +236,7 @@ public class Start extends TextView {
         new Thread(new MyBullet()).start();
         new Thread(new EnemyPlane()).start();
         new Thread(new Blast()).start();
+        runTimer();
     }
 
     public void setUsername(String username) {
@@ -233,17 +258,23 @@ public class Start extends TextView {
          }
      }
 
-    class End implements Runnable{
-
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(300 * multiple);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+     public void runTimer(){
+        int time = 130;
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                while (threadRunState){
+                    try {
+                        Thread.sleep(time);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    millisecond += time;
+                }
             }
-        }
-    }
+        }.start();
+     }
 
     class Blast implements Runnable {
         public Blast() {
@@ -275,7 +306,10 @@ public class Start extends TextView {
         public void run() {
             while (threadRunState) {
                 sleep(5L * multiple);
-                Plane plane = new Plane(my_plane.getX() + my_plane.getBitmap().getWidth() / 2f - bulletBitmap.getWidth() / 2f, my_plane.getY() - my_plane.getBitmap().getHeight(), bulletBitmap, 5);
+                Plane plane = new Plane(my_plane.getX() + my_plane.getBitmap().getWidth() / 2f - bulletBitmap.getWidth() / 2f,
+                        my_plane.getY() - my_plane.getBitmap().getHeight(),
+                        bulletBitmap,
+                        5);
                 bulletList.add(plane);
                 for (int i = 0; i < bulletList.size(); i++) {
                     Plane plane1 = bulletList.get(i);
@@ -311,7 +345,8 @@ public class Start extends TextView {
                     bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan4);
                     live = 6;
                 }
-                enemyList.add(new Plane(new Random().nextInt(dm.widthPixels - bitmap.getWidth()), -bitmap.getHeight(), bitmap, live));
+                enemyList.add(new Plane(new Random().nextInt(dm.widthPixels - bitmap.getWidth()),
+                        -bitmap.getHeight(), bitmap, live, i));
                 for (int i1 = 0; i1 < enemyList.size(); i1++) {
                     Plane plane = enemyList.get(i1);
                     if (plane.getY() >= dm.heightPixels) {
@@ -332,29 +367,47 @@ public class Start extends TextView {
         }
     }
 
-//    class EnemyBullet implements Runnable {
-//
-//        @Override
-//        public void run() {
-//            while (threadRunState) {
-//                sleep(30L * multiple);
-//                int i1 = new Random().nextInt(880) + 100;
-//                Plane plane = new Plane(i1, 2000, BitmapFactory.decodeResource(getResources(), R.drawable.bullet), 5);
-//                bulletList.add(plane);
-//                for (int i = 0; i < bulletList.size(); i++) {
-//                    Plane plane1 = bulletList.get(i);
-//                    plane1.setY(plane1.getY() + 100);
-//                    if (plane1.getY() >= 2000) {
-//                        try {
-//                            bulletList.remove(i);
-//                        }catch (Exception e){
-//                            Log.e(TAG, e.toString());
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    public static Cursor getCursor(Context context, String databaseName){
+        MySQLite sqLite = new MySQLite(context, databaseName);
+        SQLiteDatabase readableDatabase = sqLite.getReadableDatabase();
+        return readableDatabase.rawQuery("select * from " + databaseName, null);
+
+    }
+
+    public static boolean checkState(Context context){
+        Cursor cursor = Start.getCursor(context, "list");
+        return cursor.moveToNext();
+    }
+
+    public void saveAllList(){
+        if (threadRunState){
+            Gson gson = new Gson();
+            String bulletJson = gson.toJson(bulletList, new TypeToken<List<Plane>>() {}.getType());
+            String enemyJson = gson.toJson(enemyList, new TypeToken<List<Plane>>() {}.getType());
+            String blastJson = gson.toJson(blastList, new TypeToken<List<Plane>>() {}.getType());
+            String myJson = gson.toJson(my_plane);
+            MySQLite sqLite = new MySQLite(mainActivity, "list");
+            SQLiteDatabase writableDatabase = sqLite.getWritableDatabase();
+            String sql = "insert into list (bulletJson, enemyJson, blastJson, myJson, username, " +
+                    "millisecond, fraction) " +
+                    "values ('"+bulletJson+"','"+enemyJson+"','"+blastJson+"'" +
+                    ",'"+myJson+"','"+username+"','"+millisecond+"','"+index+"')";
+            writableDatabase.execSQL(sql);
+            writableDatabase.close();
+            sqLite.close();
+            Log.i(TAG, "数据保存成功");
+        }
+    }
+
+    public void deleteAllList(){
+        MySQLite sqLite = new MySQLite(mainActivity, "list");
+        SQLiteDatabase writableDatabase = sqLite.getWritableDatabase();
+        String sql = "delete from list";
+        writableDatabase.execSQL(sql);
+        writableDatabase.close();
+        sqLite.close();
+        Log.i(TAG, "数据删除成功");
+    }
 
     public void revive() {
         threadRunState = true;
@@ -366,31 +419,6 @@ public class Start extends TextView {
         }
     }
 
-    public static boolean inRange(float let_top_x, float let_top_y, float right_top_x, float right_top_y,
-                                  float let_bottom_x, float let_bottom_y, float right_bottom_x, float right_bottom_y,
-                                  float mixX, float maxX, float mixY, float maxY) {
-        if (let_top_x >= mixX && let_top_x <= maxX && let_top_y >= mixY && let_top_y <= maxY)
-            return true;
-        if (right_top_x >= mixX && right_top_x <= maxX && right_top_y >= mixY && right_top_y <= maxY)
-            return true;
-        if (let_bottom_x >= mixX && let_bottom_x <= maxX && let_bottom_y >= mixY && let_bottom_y <= maxY)
-            return true;
-        return right_bottom_x >= mixX && right_bottom_x <= maxX && right_bottom_y >= mixY && right_bottom_y <= maxY;
-    }
-
-
-    public static boolean inRange(Plane plane, Plane plane1) {
-        return inRange(plane.getX(), plane.getY(), plane.getX() + plane.getBitmap().getWidth(), plane.getY(), plane.getX() + plane.getBitmap().getHeight(), plane.getY() + plane.getBitmap().getHeight(),
-                plane.getX() + plane.getBitmap().getWidth(), plane.getY() + plane.getBitmap().getHeight(), plane1.getX(), plane1.getX() + plane1.getBitmap().getWidth(), plane1.getY(), plane1.getY() + plane1.getBitmap().getHeight());
-    }
-
-//    public void test(){
-//        //                774   2073   752  2073
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan1);
-//        boolean flag = inRange(new Plane(300, 1000, BitmapFactory.decodeResource(getResources(), R.drawable.bullet)), 340, 340 + bitmap.getWidth(), 1000);
-//        int x= 0;
-//    }
-
     public static boolean inRange(Plane plane, float minX, float maxX, float y) {
         if (y >= plane.getY() && y <= plane.getY() + plane.getBitmap().getHeight()){
             if (plane.getX() >= minX && plane.getX() <= maxX) return true;
@@ -399,9 +427,5 @@ public class Start extends TextView {
             return false;
         }
     }
-
-    public static boolean inRange(Plane plane, float x, float y) {
-        return (x >= plane.getX() && x<= plane.getX() + plane.getBitmap().getWidth() && y >= plane.getY() && y <= plane.getY() + plane.getBitmap().getHeight());
-      }
 
 }

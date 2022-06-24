@@ -7,6 +7,7 @@ public class Root {
     private float x;
     private float y;
     private Bitmap bitmap;
+    private Integer bitmapType = 1;
 
     public float getX() {
         return x;
@@ -32,9 +33,24 @@ public class Root {
         this.bitmap = bitmap;
     }
 
+    public Integer getBitmapType() {
+        return bitmapType;
+    }
+
+    public void setBitmapType(Integer bitmapType) {
+        this.bitmapType = bitmapType;
+    }
+
     public Root(float x, float y, Bitmap bitmap) {
         this.x = x;
         this.y = y;
         this.bitmap = bitmap;
+    }
+
+    public Root(float x, float y, Bitmap bitmap, Integer bitmapType) {
+        this.x = x;
+        this.y = y;
+        this.bitmap = bitmap;
+        this.bitmapType = bitmapType;
     }
 }

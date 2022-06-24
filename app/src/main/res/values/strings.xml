@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">test</string>
+    <string name="app_name">飞机大战</string>
     <string name="number">你的分数为：</string>
     <string name="restart">重新开始</string>
     <string name="revive">复活</string>
@@ -17,5 +17,7 @@
     <string name="save_successfully">保存成功</string>
     <string name="repeat_is_operation">请勿重复操作</string>
     <string name="quit_game">再按一次退出游戏</string>
-    <string name="destroy_enemy_plane">已击毁敌机数量</string>
+    <string name="destroy_enemy_plane">分数:</string>
+    <string name="timer">00:00:00</string>
+    <string name="continue_game">继续游戏</string>
 </resources>

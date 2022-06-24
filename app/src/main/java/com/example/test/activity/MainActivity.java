@@ -2,10 +2,14 @@ package com.example.test.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -14,14 +18,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.test.R;
 import com.example.test.view.Start;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
     private long time;
     private Start start;
-    private boolean save = true;
-    public static int mStatus = 0;
-    private final int index = 0;
+    public static int mStatus = -1;
     private String username;
+    private boolean state = true;
+    private final String TAG = this.getClass().getName();
+
 
     public static void setMStatus(int i) {
         mStatus = i;
@@ -37,60 +44,65 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        username = (String) getIntent().getExtras().get("username");
-        start = new Start(this);
-        start.setUsername(username);
-        reStart(start);
+        state = Start.checkState(this);
     }
 
     @SuppressLint({"Range", "SetTextI18n","ResourceType"})
     @Override
     protected void onRestart() {
+        Log.e(TAG, "==================onRestart==================");
         super.onRestart();
-        if(getMStatus() == 0 || getMStatus() == 1 ){
-            reStart(new Start(this));
-        }else if (getMStatus() == 2){
-            buttonRestart();
-        }else if(getMStatus() == 3 ){
-            if (save){
-                start.save();
-                Toast.makeText(this, this.getString(R.string.save_successfully), Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(this, this.getString(R.string.repeat_is_operation), Toast.LENGTH_SHORT).show();
-            }
-            save = false;
-        }else {
-            exit();
-        }
     }
 
     @Override
     protected void onStart() {
-        Log.e("===", "onStart");
+        Log.e(TAG, "==================onStart==================");
         super.onStart();
     }
 
     @Override
     protected void onResume() {
-        Log.e("===", "onResume");
+        Log.e(TAG, "==================onResume==================");
         super.onResume();
+        if (state){
+            startActivity(new Intent(this, ContinueActivity.class));
+            state = false;
+        }else {
+            if (getMStatus() == -1){
+                setContentView(R.layout.activity_main);
+            }else if (getMStatus() == 0){
+                start = new Start(this, this, true);
+                reStart(start);
+            }else if(getMStatus() == 1){
+                start = new Start(this, this);
+                reStart(start);
+            }else if (getMStatus() == 2){
+                buttonRestart();
+            }else if (getMStatus() == 5){
+                exit();
+            }
+        }
     }
 
     @Override
     protected void onPause() {
-        Log.e("===", "onPause");
+        Log.e(TAG, "==================onPause==================");
         super.onPause();
+        if (start != null){
+            start.saveAllList();
+        }
+
     }
 
     @Override
     protected void onStop() {
-        Log.e("===", "onStop");
+        Log.e(TAG, "==================onStop==================");
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        Log.e("===", "onDestroy");
+        Log.e(TAG, "==================onDestroy==================");
         super.onDestroy();
     }
 
@@ -98,7 +110,42 @@ public class MainActivity extends AppCompatActivity {
     public void reStart(Start start){
         start.setThis(this);
         start.revive();
+        start.setUsername(username);
         setContentView(start);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER){
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if(inputMethodManager.isActive()){
+                inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+            }
+            onClick(findViewById(R.id.usernameText));
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @SuppressLint("Recycle")
+    public void onClick(View view) {
+        EditText nameText = findViewById(R.id.usernameText);
+        if (nameText.getText() == null | Objects.equals(nameText.getText(), R.string.username_is_long)){
+            username = this.getString(R.string.unknown_user);
+        }else {
+            username = nameText.getText().toString();
+        }
+        if (username.length() >= 9){
+            Toast.makeText(this, this.getString(R.string.username_is_long), Toast.LENGTH_SHORT).show();
+        }else {
+            start = new Start(this, this);
+            reStart(start);
+        }
+
+    }
+
+    public void closeOnClick(View view) {
+        onClick(view);
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) { //返回键
@@ -125,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonRestart(){
-        save = true;
         start.startThread(1);
         setContentView(start);
     }

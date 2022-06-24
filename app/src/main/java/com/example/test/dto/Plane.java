@@ -5,24 +5,15 @@ import android.graphics.Bitmap;
 public class Plane extends Root {
 
     private int live = 5;
-
-    public Long getTime() {
-        return time;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
     private Long time = 2000l;
 
-    public Plane(float x, float y, Bitmap bitmap, int live) {
-        super(x, y, bitmap);
+    public Plane(float x, float y, Bitmap bitmap, int live, Integer bitmapType) {
+        super(x, y, bitmap, bitmapType);
         this.live = live;
     }
 
-    public Plane(float x, float y, Bitmap bitmap) {
-        super(x, y, bitmap);
+    public Plane(float x, float y, Bitmap bitmap, Integer bitmapType) {
+        super(x, y, bitmap, bitmapType);
     }
 
     public int getLive() {
@@ -44,6 +35,10 @@ public class Plane extends Root {
                 + "," +
                 "y{" +
                 "y=" + this.getY() +
+                '}'
+                + "," +
+                "y{" +
+                "bitmapType=" + this.getBitmapType() +
                 '}';
     }
 }

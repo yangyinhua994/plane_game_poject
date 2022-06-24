@@ -26,7 +26,7 @@ public class RankingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "======================onCreate======================");
+        Log.e(TAG, "======================onCreate======================");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
         recyclerView = findViewById(R.id.recyclerView);
@@ -35,13 +35,13 @@ public class RankingActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        Log.i(TAG, "======================onStart======================");
+        Log.e(TAG, "======================onStart======================");
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        Log.i(TAG, "======================onStop======================");
+        Log.e(TAG, "======================onStop======================");
         super.onStop();
     }
 
@@ -72,19 +72,19 @@ public class RankingActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        Log.i(TAG, "======================onRestart======================");
+        Log.e(TAG, "======================onRestart======================");
         super.onRestart();
     }
 
     @Override
     protected void onPause() {
-        Log.i(TAG, "======================onPause======================");
+        Log.e(TAG, "======================onPause======================");
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        Log.i(TAG, "======================onDestroy======================");
+        Log.e(TAG, "======================onDestroy======================");
         super.onDestroy();
     }
 

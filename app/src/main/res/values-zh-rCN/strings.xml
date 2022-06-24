@@ -18,5 +18,7 @@
     <string name="save_successfully">保存成功</string>
     <string name="repeat_is_operation">请勿重复操作</string>
     <string name="quit_game">再按一次退出游戏</string>
-    <string name="destroy_enemy_plane">已击毁敌机数量</string>
+    <string name="destroy_enemy_plane">fraction</string>
+    <string name="timer">00:00:00</string>
+    <string name="continue_game">继续游戏</string>
 </resources>
