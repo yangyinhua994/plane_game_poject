@@ -15,7 +15,9 @@ public class MySQLite extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table user (_id integer primary key autoincrement, username varchar(30), number Interger(20), create_time Date)");
-        db.execSQL("create table list (bulletJson varchar(255), enemyJson varchar(255), blastJson varchar(255), myJson varchar(255), username varchar(30), millisecond varchar(50), fraction varchar(30))");
+        db.execSQL("create table list (bulletJson varchar(255), enemyJson varchar(255)," +
+                " blastJson varchar(255), myJson varchar(255)," + " username varchar(30), " +
+                "millisecond varchar(50), fraction varchar(30))");
     }
 
     @Override

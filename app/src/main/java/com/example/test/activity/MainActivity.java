@@ -64,24 +64,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         Log.e(TAG, "==================onResume==================");
         super.onResume();
-        if (state){
-            startActivity(new Intent(this, ContinueActivity.class));
-            state = false;
-        }else {
-            if (getMStatus() == -1){
-                setContentView(R.layout.activity_main);
-            }else if (getMStatus() == 0){
-                start = new Start(this, this, true);
-                reStart(start);
-            }else if(getMStatus() == 1){
-                start = new Start(this, this);
-                reStart(start);
-            }else if (getMStatus() == 2){
-                buttonRestart();
-            }else if (getMStatus() == 5){
-                exit();
+        if (getMStatus() != -2){
+            if (state){
+                startActivity(new Intent(this, ContinueActivity.class));
+                state = false;
+            }else {
+                if (getMStatus() == -1){
+                    setContentView(R.layout.activity_main);
+                }else if (getMStatus() == 0){
+                    start = new Start(this, this, true);
+                    reStart(start);
+                }else if(getMStatus() == 1){
+                    start = new Start(this, this);
+                    reStart(start);
+                }else if (getMStatus() == 2){
+                    buttonRestart();
+                }else if (getMStatus() == 5){
+                    exit();
+                }
             }
         }
+        setMStatus(-2);
     }
 
     @Override
@@ -129,19 +132,16 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("Recycle")
     public void onClick(View view) {
-        EditText nameText = findViewById(R.id.usernameText);
-        if (nameText.getText() == null | Objects.equals(nameText.getText(), R.string.username_is_long)){
+        EditText editText = findViewById(R.id.usernameText);
+        username = editText.getText().toString();
+        if (username.equals("")){
             username = this.getString(R.string.unknown_user);
-        }else {
-            username = nameText.getText().toString();
-        }
-        if (username.length() >= 9){
+        }if (username.length() >= 9){
             Toast.makeText(this, this.getString(R.string.username_is_long), Toast.LENGTH_SHORT).show();
         }else {
             start = new Start(this, this);
             reStart(start);
         }
-
     }
 
     public void closeOnClick(View view) {

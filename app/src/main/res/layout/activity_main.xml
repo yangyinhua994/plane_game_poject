@@ -10,9 +10,10 @@
         android:layout_width="21dp"
         android:layout_height="21dp"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:onClick="closeOnClick"
-        android:background="@drawable/register1"/>
+        android:background="@drawable/register1"
+        tools:ignore="UsingOnClickInXml" />
 
 
 
@@ -28,13 +29,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/username"
-            android:imeOptions="actionNext"/>
+            android:imeOptions="actionNext"
+            tools:ignore="TextViewEdits" />
 
         <EditText
             android:id="@+id/usernameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22dp"
+            android:textSize="22sp"
             android:selectAllOnFocus="true"/>
 
         <TextView
@@ -42,9 +44,9 @@
             android:layout_height="51dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/register3"
-            android:onClick="onClick"/>
+            android:onClick="onClick"
+            tools:ignore="UsingOnClickInXml" />
 
     </LinearLayout>
-
 
 </LinearLayout>

@@ -12,8 +12,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TimeUtils;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -54,6 +57,7 @@ public class Start extends TextView {
     private int invincibleTime = 0;
     private String username;
     private Integer millisecond = 0;
+    private String timer;
 
     public Start(Context context, MainActivity mainActivity) {
         super(context);
@@ -81,6 +85,9 @@ public class Start extends TextView {
                 enemyList = gson.fromJson(cursor.getString(cursor.getColumnIndex("enemyJson")), type);
                 blastList = gson.fromJson(cursor.getString(cursor.getColumnIndex("blastJson")), type);
                 my_plane = gson.fromJson(cursor.getString(cursor.getColumnIndex("myJson")), Plane.class);
+                username = cursor.getString(cursor.getColumnIndex("username"));
+                index = Integer.parseInt(cursor.getString(cursor.getColumnIndex("fraction")));
+                millisecond = Integer.valueOf(cursor.getString(cursor.getColumnIndex("millisecond")));
                 deleteAllList();
                 init();
             }
@@ -89,6 +96,7 @@ public class Start extends TextView {
     }
 
     private void init() {
+        timer = mainActivity.getString(R.string.timer);
         StartActivity.setAllData(this);
         MediaPlayer mediaPlayerBack = MediaPlayer.create(context, R.raw.back);
         mediaPlayerBlast = MediaPlayer.create(context, R.raw.blast);
@@ -97,7 +105,7 @@ public class Start extends TextView {
         mediaPlayerBack.setLooping(true);
         mediaPlayerBack.start();
         bulletBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
-        setBackgroundColor(Color.parseColor("#000000"));
+        setBackgroundResource(R.drawable.black);
         setTextColor(Color.parseColor("#ffffff"));
         setPadding(10,10,0,0);
         setTextSize(22);
@@ -172,7 +180,9 @@ public class Start extends TextView {
                     }
                 }
             }
-            this.setText(mainActivity.getString(R.string.destroy_enemy_plane) + "：" + index);
+            this.setText(mainActivity.getString(R.string.destroy_enemy_plane) + "：" + index +
+                    "\n"
+                    + DateUtils.formatElapsedTime(millisecond / 1000) + ":" + millisecond % 100);
             canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.my_plan), my_plane.getX(), my_plane.getY(), paint);
         }
     }
@@ -259,7 +269,7 @@ public class Start extends TextView {
      }
 
      public void runTimer(){
-        int time = 130;
+        int time = 123;
         new Thread(){
             @Override
             public void run() {
