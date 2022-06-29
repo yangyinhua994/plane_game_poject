@@ -80,9 +80,14 @@ public class MainActivity extends AppCompatActivity {
                 }else if (getMStatus() == 2){
                     buttonRestart();
                 }else if (getMStatus() == 5){
+                    start.deleteAllList();
                     exit();
                 }
             }
+        }
+        if (start != null){
+            start.setThreadRunState(true);
+            start.startThread();
         }
         setMStatus(-2);
     }
@@ -91,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         Log.e(TAG, "==================onPause==================");
         super.onPause();
-        if (start != null){
+        if (start != null && start.isThreadRunState()){
             start.saveAllList();
+            start.setThreadRunState(false);
         }
-
     }
 
     @Override
@@ -111,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("InflateParams")
     public void reStart(Start start){
-        start.setThis(this);
-        start.revive();
+        start.setMainActivity(this);
+        start.setThreadRunState(true);
         start.setUsername(username);
         setContentView(start);
     }
@@ -136,12 +141,9 @@ public class MainActivity extends AppCompatActivity {
         username = editText.getText().toString();
         if (username.equals("")){
             username = this.getString(R.string.unknown_user);
-        }if (username.length() >= 9){
-            Toast.makeText(this, this.getString(R.string.username_is_long), Toast.LENGTH_SHORT).show();
-        }else {
-            start = new Start(this, this);
-            reStart(start);
         }
+        start = new Start(this, this);
+        reStart(start);
     }
 
     public void closeOnClick(View view) {

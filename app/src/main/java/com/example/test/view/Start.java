@@ -15,8 +15,6 @@ import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TimeUtils;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -38,8 +36,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @SuppressLint({"AppCompatCustomView", "ViewConstructor"})
 public class Start extends TextView {
 
+    public void setThreadRunState(boolean threadRunState) {
+        this.threadRunState = threadRunState;
+    }
+
+    public boolean isThreadRunState() {
+        return threadRunState;
+    }
+
     private boolean threadRunState = true;
-    private final int multiple = 10;
+    private final int multiple = 20;
     private final Paint paint = new Paint();
     private CopyOnWriteArrayList<Plane> bulletList;
     private CopyOnWriteArrayList<Plane> enemyList;
@@ -260,7 +266,7 @@ public class Start extends TextView {
          @Override
          public void run() {
              try {
-                 Thread.sleep(300 * multiple);
+                 Thread.sleep(3000);
              } catch (InterruptedException e) {
                  e.printStackTrace();
              }
@@ -312,15 +318,14 @@ public class Start extends TextView {
 
     class MyBullet implements Runnable {
 
+        private final float bulletCoreY = my_plane.getY() - my_plane.getBitmap().getHeight();
         @Override
         public void run() {
             while (threadRunState) {
+                float myPlaneCoreX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f);
+                float bulletCoreX = myPlaneCoreX - (bulletBitmap.getWidth() / 2f);
                 sleep(5L * multiple);
-                Plane plane = new Plane(my_plane.getX() + my_plane.getBitmap().getWidth() / 2f - bulletBitmap.getWidth() / 2f,
-                        my_plane.getY() - my_plane.getBitmap().getHeight(),
-                        bulletBitmap,
-                        5);
-                bulletList.add(plane);
+                bulletList.add(new Plane(bulletCoreX, bulletCoreY, bulletBitmap, 5));
                 for (int i = 0; i < bulletList.size(); i++) {
                     Plane plane1 = bulletList.get(i);
 //                        小于让子弹有飞出屏幕的效果
@@ -419,14 +424,9 @@ public class Start extends TextView {
         Log.i(TAG, "数据删除成功");
     }
 
-    public void revive() {
-        threadRunState = true;
-    }
 
-    public void setThis(MainActivity mainActivity) {
-        if (mainActivity != null){
-            this.mainActivity = mainActivity;
-        }
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     public static boolean inRange(Plane plane, float minX, float maxX, float y) {
