@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    游戏运行的倍率-->
+    <integer name="refreshRate">1</integer>
+    <!--    敌方飞机移动距离-->
+    <integer name="enemyPlaneMoveDistance">10</integer>
+    <!--    移动敌方飞机的刷新速率-->
+    <integer name="enemyPlaneMoveGenerateSpeed">30</integer>
+    <!--    敌方飞机的生成速度-->
+    <integer name="enemyPlaneGenerateSpeed">150</integer>
+    <!--    子弹生成速度-->
+    <integer name="bulletGenerateSpeed">50</integer>
+    <!--    界面的刷新速率-->
+    <integer name="magnification">5</integer>
+    <!--    总分-->
+    <integer name="index">0</integer>
+    <!--    计时器的时间-->
+    <integer name="millisecond">0</integer>
+    <!--    无敌时间-->
+    <integer name="invincibleTime">3000</integer>
+    <!--    判断爆炸的刷新速率-->
+    <integer name="blastGenerateSpeed">10</integer>
+</resources>

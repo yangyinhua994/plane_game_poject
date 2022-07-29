@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonRestart(){
-        start.startThread(1);
+        start.startThread(true);
         setContentView(start);
     }
 
