@@ -27,6 +27,7 @@ import com.example.test.sqlite.MySQLite;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.sql.Date;
 import java.util.List;
@@ -35,6 +36,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @SuppressLint({"AppCompatCustomView", "ViewConstructor"})
 public class Start extends TextView {
+
+    private final Paint paint1 = new Paint();
 
     public void setThreadRunState(boolean threadRunState) {
         this.threadRunState = threadRunState;
@@ -46,7 +49,7 @@ public class Start extends TextView {
 
     private boolean threadRunState = true;
     private final int multiple = 20;
-    private final Paint paint = new Paint();
+    private final Paint paint = paint1;
     private CopyOnWriteArrayList<Plane> bulletList;
     private CopyOnWriteArrayList<Plane> enemyList;
     private CopyOnWriteArrayList<Plane> blastList;
@@ -318,14 +321,11 @@ public class Start extends TextView {
 
     class MyBullet implements Runnable {
 
-        private final float bulletCoreY = my_plane.getY() - my_plane.getBitmap().getHeight();
         @Override
         public void run() {
             while (threadRunState) {
-                float myPlaneCoreX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f);
-                float bulletCoreX = myPlaneCoreX - (bulletBitmap.getWidth() / 2f);
                 sleep(5L * multiple);
-                bulletList.add(new Plane(bulletCoreX, bulletCoreY, bulletBitmap, 5));
+                bulletList.add(new Plane(my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f), my_plane.getY() - my_plane.getBitmap().getHeight(), bulletBitmap, 5));
                 for (int i = 0; i < bulletList.size(); i++) {
                     Plane plane1 = bulletList.get(i);
 //                        小于让子弹有飞出屏幕的效果
