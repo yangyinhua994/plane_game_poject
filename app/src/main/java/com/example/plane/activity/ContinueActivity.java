@@ -21,7 +21,7 @@ public class ContinueActivity extends AppCompatActivity {
             finish();
         });
         restart.setOnClickListener(v -> {
-            MainActivity.setMStatus(1);
+            MainActivity.setMStatus(6);
             finish();
         });
         quit.setOnClickListener(v -> {

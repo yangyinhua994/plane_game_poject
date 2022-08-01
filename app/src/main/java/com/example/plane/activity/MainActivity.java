@@ -85,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                     finishAffinity();
                     System.exit(0);
+                }else if (getMStatus() == 6){
+//                    异常关闭的重新开始
+                    start = new Start(this, this);
+                    setContentView(start);
                 }
             }
         }
