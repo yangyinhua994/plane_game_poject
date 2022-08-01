@@ -1,4 +1,4 @@
-package com.example.test.dto;
+package com.example.plane.dto;
 
 import android.graphics.Bitmap;
 

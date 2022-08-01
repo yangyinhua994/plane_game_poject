@@ -1,11 +1,4 @@
-package com.example.test.dto;
-
-import android.annotation.SuppressLint;
-
-import androidx.annotation.NonNull;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
+package com.example.plane.dto;
 
 public class User {
 

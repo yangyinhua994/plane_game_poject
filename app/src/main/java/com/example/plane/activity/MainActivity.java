@@ -1,4 +1,4 @@
-package com.example.test.activity;
+package com.example.plane.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,9 +16,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.test.R;
-import com.example.test.view.Start;
-
-import java.util.Objects;
+import com.example.plane.view.Start;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,19 +73,23 @@ public class MainActivity extends AppCompatActivity {
                     start = new Start(this, this, true);
                     reStart(start);
                 }else if(getMStatus() == 1){
-                    start = new Start(this, this);
-                    reStart(start);
+                    if (start != null){
+                        start.restartInit();
+                        reStart(start);
+                    }
                 }else if (getMStatus() == 2){
                     buttonRestart();
                 }else if (getMStatus() == 5){
-                    start.deleteAllList();
-                    exit();
+                    if (start != null){
+                        start.deleteAllList();
+                    }
+                    finishAffinity();
+                    System.exit(0);
                 }
             }
         }
         if (start != null){
             start.setThreadRunState(true);
-            start.startThread();
         }
         setMStatus(-2);
     }
@@ -154,7 +156,8 @@ public class MainActivity extends AppCompatActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
             long t=System.currentTimeMillis();//获取系统时间
             if(t-time<=500){
-                exit(); //如果500毫秒内按下两次返回键则退出游戏
+                finishAffinity();
+                System.exit(0);
             }else{
                 time=t;
                 Toast.makeText(getApplicationContext(),this.getString(R.string.quit_game),Toast.LENGTH_SHORT).show();
@@ -163,18 +166,13 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
-
-    }
-    public void exit(){
-        MainActivity.this.finish();
-        new Thread(() -> {
-            try {Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}
-            System.exit(0);
-        }).start();
     }
 
     public void buttonRestart(){
-        start.startThread(true);
+        start.initMyPlane();
+        start.setThreadRunState(true);
+        start.setInvincible(true);
+        start.invincibleTime();
         setContentView(start);
     }
 

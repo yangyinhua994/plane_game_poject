@@ -1,4 +1,4 @@
-package com.example.test.activity;
+package com.example.plane.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,10 +10,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.test.sqlite.MySQLite;
+import com.example.plane.sqlite.MySQLite;
 import com.example.test.R;
-import com.example.test.adapter.RankingAdapter;
-import com.example.test.dto.User;
+import com.example.plane.adapter.RankingAdapter;
+import com.example.plane.dto.User;
 
 import java.util.ArrayList;
 import java.util.List;

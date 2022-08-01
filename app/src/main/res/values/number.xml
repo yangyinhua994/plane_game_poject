@@ -3,15 +3,15 @@
     <!--    游戏运行的倍率-->
     <integer name="refreshRate">1</integer>
     <!--    敌方飞机移动距离-->
-    <integer name="enemyPlaneMoveDistance">10</integer>
+    <integer name="enemyPlaneMoveDistance">1</integer>
     <!--    移动敌方飞机的刷新速率-->
-    <integer name="enemyPlaneMoveGenerateSpeed">30</integer>
+    <integer name="enemyPlaneMoveGenerateSpeed">25</integer>
     <!--    敌方飞机的生成速度-->
-    <integer name="enemyPlaneGenerateSpeed">150</integer>
+    <integer name="enemyPlaneGenerateSpeed">600</integer>
     <!--    子弹生成速度-->
-    <integer name="bulletGenerateSpeed">50</integer>
+    <integer name="bulletGenerateSpeed">100</integer>
     <!--    界面的刷新速率-->
-    <integer name="magnification">5</integer>
+    <integer name="magnification">1</integer>
     <!--    总分-->
     <integer name="index">0</integer>
     <!--    计时器的时间-->

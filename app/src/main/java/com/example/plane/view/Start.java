@@ -1,4 +1,4 @@
-package com.example.test.view;
+package com.example.plane.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,17 +20,20 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.test.R;
-import com.example.test.activity.MainActivity;
-import com.example.test.activity.StartActivity;
-import com.example.test.dto.Plane;
-import com.example.test.sqlite.MySQLite;
+import com.example.plane.activity.MainActivity;
+import com.example.plane.activity.StartActivity;
+import com.example.plane.dto.Plane;
+import com.example.plane.sqlite.MySQLite;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.net.ssl.ManagerFactoryParameters;
 
 @SuppressLint({"AppCompatCustomView", "ViewConstructor"})
 public class Start extends TextView {
@@ -42,8 +45,9 @@ public class Start extends TextView {
     public boolean isThreadRunState() {
         return threadRunState;
     }
-//    倍率
-    private final int refreshRate = getResources().getInteger(R.integer.refreshRate);
+
+    //    倍率
+    private int refreshRate = getResources().getInteger(R.integer.refreshRate);
 //    敌方飞机移动距离
     private final int enemyPlaneMoveDistance = getResources().getInteger(R.integer.enemyPlaneMoveDistance);
 //    移动敌方飞机的刷新速率
@@ -55,13 +59,22 @@ public class Start extends TextView {
 //    界面的刷新速率
     private final int magnification = getResources().getInteger(R.integer.magnification);
 //    总分
-    private int index = R.integer.index;
+    private int index = getResources().getInteger(R.integer.index);
 //    计时器的时间
     private Integer millisecond = getResources().getInteger(R.integer.millisecond);
 //    无敌时间
     private final int invincibleTime = getResources().getInteger(R.integer.invincibleTime);
 //    判断爆炸的刷新速率
     private final int blastGenerateSpeed = getResources().getInteger(R.integer.blastGenerateSpeed);
+
+    public boolean isInvincible() {
+        return isInvincible;
+    }
+
+    public void setInvincible(boolean invincible) {
+        isInvincible = invincible;
+    }
+
 //    子弹的高度
     private int bulletHeight;
 //    无敌状态
@@ -90,7 +103,7 @@ public class Start extends TextView {
         bulletList = new CopyOnWriteArrayList<>();
         enemyList = new CopyOnWriteArrayList<>();
         blastList = new CopyOnWriteArrayList<>();
-        my_plane = setMyPlane();
+        initMyPlane();
         init();
     }
 
@@ -117,6 +130,16 @@ public class Start extends TextView {
             }
             cursor.close();
         }
+    }
+
+    public void restartInit(){
+        initMyPlane();
+        bulletList = new CopyOnWriteArrayList<>();
+        enemyList = new CopyOnWriteArrayList<>();
+        blastList = new CopyOnWriteArrayList<>();
+        index = getResources().getInteger(R.integer.index);
+        millisecond = getResources().getInteger(R.integer.index);
+        index = getResources().getInteger(R.integer.index);
     }
 
     private void init() {
@@ -246,8 +269,8 @@ public class Start extends TextView {
         writableDatabase.execSQL(sql);
     }
 
-    public Plane setMyPlane(){
-        return new Plane(dm.widthPixels / 2f, dm.heightPixels - 300, BitmapFactory.decodeResource(getResources(), R.drawable.my_plan), 0);
+    public void initMyPlane(){
+        my_plane = new Plane(dm.widthPixels / 2f, dm.heightPixels - 300, BitmapFactory.decodeResource(getResources(), R.drawable.my_plan), 0);
     }
 
     public void startThread() {
@@ -260,39 +283,26 @@ public class Start extends TextView {
         moveEnemyPlane();
     }
 
-    public void startThread(boolean b) {
-        threadRunState = true;
-        if (bulletList.size() != 0 || enemyList.size() != 0 || blastList.size() != 0){
-            this.isInvincible = b;
-        }
-        my_plane = setMyPlane();
-        new Thread(new InvincibleTime()).start();
-        new Thread(new refresh()).start();
-        new Thread(new MyBullet()).start();
-        new Thread(new EnemyPlane()).start();
-        new Thread(new Blast()).start();
-        moveEnemyPlane();
-        runTimer();
-    }
-
     public void setUsername(String username) {
         if (this.username == null){
             this.username = username;
         }
     }
 
-    class InvincibleTime implements Runnable{
-
-         @Override
-         public void run() {
-             try {
-                 Thread.sleep(invincibleTime);
-             } catch (InterruptedException e) {
-                 e.printStackTrace();
-             }
-             isInvincible = false;
-         }
-     }
+    public void invincibleTime(){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Thread.sleep(invincibleTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                isInvincible = false;
+            }
+        }.start();
+    }
 
      public void runTimer(){
         int time = 123;
@@ -300,9 +310,11 @@ public class Start extends TextView {
             @Override
             public void run() {
                 super.run();
-                while (threadRunState){
-                    Start.sleep(time);
-                    millisecond += time;
+                while (true){
+                    if (threadRunState){
+                        Start.sleep(time);
+                        millisecond += time;
+                    }
                 }
             }
         }.start();
@@ -310,37 +322,38 @@ public class Start extends TextView {
 
     public void moveEnemyPlane(){
         new Thread(() -> {
-            while (threadRunState){
-                for (int i1 = 0; i1 < enemyList.size(); i1++) {
-                    Plane plane = enemyList.get(i1);
-                    if (plane.getY() >= dm.heightPixels) {
-                        try {
-                            enemyList.remove(i1);
-                        }catch (Exception e){
-                            Log.e(TAG, e.toString());
+            while (true){
+                if (threadRunState){
+                    for (int i1 = 0; i1 < enemyList.size(); i1++) {
+                        Plane plane = enemyList.get(i1);
+                        if (plane.getY() >= dm.heightPixels) {
+                            try {
+                                enemyList.remove(i1);
+                            }catch (Exception e){
+                                Log.e(TAG, e.toString());
+                            }
+                        } else {
+                            plane.setY(plane.getY() + enemyPlaneMoveDistance + plane.getMoveSpeed());
                         }
-                    } else {
-                        plane.setY(plane.getY() + enemyPlaneMoveDistance + plane.getMoveSpeed());
                     }
+                    for (int i1 = 0; i1 < blastList.size(); i1++) {
+                        Plane plane = blastList.get(i1);
+                        plane.setY(plane.getY());
+                    }
+                    sleep(enemyPlaneMoveGenerateSpeed);
                 }
-                for (int i1 = 0; i1 < blastList.size(); i1++) {
-                    Plane plane = blastList.get(i1);
-                    plane.setY(plane.getY());
-                }
-                sleep(enemyPlaneMoveGenerateSpeed);
             }
         }).start();
     }
 
     class Blast implements Runnable {
-        public Blast() {
-            new Thread(this).start();
-        }
         @Override
         public void run() {
-            while (threadRunState) {
-                sleep(blastGenerateSpeed * refreshRate);
-                blastList = new CopyOnWriteArrayList<>();
+            while (true) {
+                if (threadRunState){
+                    sleep(blastGenerateSpeed * refreshRate);
+                    blastList = new CopyOnWriteArrayList<>();
+                }
             }
         }
     }
@@ -349,9 +362,11 @@ public class Start extends TextView {
 
         @Override
         public void run() {
-            while (threadRunState) {
-                sleep(magnification);
-                postInvalidate();
+            while (true) {
+                if (threadRunState){
+                    sleep(magnification);
+                    postInvalidate();
+                }
             }
         }
     }
@@ -360,21 +375,24 @@ public class Start extends TextView {
 
         @Override
         public void run() {
-            while (threadRunState) {
-                sleep(bulletGenerateSpeed * refreshRate);
-                bulletList.add(new Plane(my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f), my_plane.getY() - my_plane.getBitmap().getHeight(), bulletBitmap, 5));
-                for (int i = 0; i < bulletList.size(); i++) {
-                    Plane plane1 = bulletList.get(i);
+            while (true) {
+                if (threadRunState){
+                    sleep(bulletGenerateSpeed * refreshRate);
+                    bulletList.add(new Plane(my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f), my_plane.getY() - my_plane.getBitmap().getHeight(), bulletBitmap, 5));
+                    for (int i = 0; i < bulletList.size(); i++) {
+                        Plane plane1 = bulletList.get(i);
 //                        小于让子弹有飞出屏幕的效果
-                    if (plane1.getY() < bulletHeight) {
-                        try {
-                            bulletList.remove(i);
-                        }catch (Exception ignored){
+                        if (plane1.getY() < bulletHeight) {
+                            try {
+                                bulletList.remove(i);
+                            }catch (Exception ignored){
+                            }
+                        } else {
+                            plane1.setY(plane1.getY() - bulletBitmap.getHeight());
                         }
-                    } else {
-                        plane1.setY(plane1.getY() - bulletBitmap.getHeight());
                     }
                 }
+
             }
         }
     }
@@ -383,25 +401,28 @@ public class Start extends TextView {
 
         @Override
         public void run() {
-            while (threadRunState) {
-                sleep(enemyPlaneGenerateSpeed * refreshRate);
-                int i = new Random().nextInt(4) + 1;
-                Bitmap bitmap;
-                int live = 3;
-                if (i == 1) {
-                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan1);
-                } else if (i == 2) {
-                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan2);
-                    live = 4;
-                } else if (i == 3) {
-                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan3);
-                    live = 5;
-                } else {
-                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan4);
-                    live = 6;
+            while (true) {
+                if (threadRunState){
+                    sleep(enemyPlaneGenerateSpeed * refreshRate);
+                    int i = new Random().nextInt(4) + 1;
+                    Bitmap bitmap;
+                    int live = 3;
+                    if (i == 1) {
+                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan1);
+                    } else if (i == 2) {
+                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan2);
+                        live = 4;
+                    } else if (i == 3) {
+                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan3);
+                        live = 5;
+                    } else {
+                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan4);
+                        live = 6;
+                    }
+                    enemyList.add(new Plane(new Random().nextInt(dm.widthPixels - bitmap.getWidth()),
+                            -bitmap.getHeight(), bitmap, live, i, 2 * i));
                 }
-                enemyList.add(new Plane(new Random().nextInt(dm.widthPixels - bitmap.getWidth()),
-                        -bitmap.getHeight(), bitmap, live, i, 2 * i));
+
             }
         }
     }
@@ -445,7 +466,6 @@ public class Start extends TextView {
         writableDatabase.execSQL(sql);
         writableDatabase.close();
         sqLite.close();
-        Log.i(TAG, "数据删除成功");
     }
 
 

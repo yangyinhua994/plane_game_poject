@@ -1,4 +1,4 @@
-package com.example.test.adapter;
+package com.example.plane.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.test.R;
-import com.example.test.dto.User;
+import com.example.plane.dto.User;
 
 import java.util.List;
 

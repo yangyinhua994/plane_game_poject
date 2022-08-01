@@ -1,21 +1,23 @@
-package com.example.test.activity;
+package com.example.plane.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.test.R;
-import com.example.test.view.Start;
+import com.example.plane.view.Start;
 
 public class StartActivity extends Activity {
 
     private static boolean save = true;
     private static Start start;
     private String username;
+    private long time;
 
     public static void setStart(Start start) {
         StartActivity.start = start;
@@ -64,6 +66,22 @@ public class StartActivity extends Activity {
             MainActivity.setMStatus(5);
             finish();
         });
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) { //返回键
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+            long t=System.currentTimeMillis();//获取系统时间
+            if(t-time<=500){
+                finishAffinity();
+                System.exit(0);
+            }else{
+                time=t;
+                Toast.makeText(getApplicationContext(),this.getString(R.string.quit_game),Toast.LENGTH_SHORT).show();
+            }
+
+            return true;
+        }
+        return false;
     }
 
     @Override

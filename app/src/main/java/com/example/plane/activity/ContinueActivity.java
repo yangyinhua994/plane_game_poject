@@ -1,4 +1,4 @@
-package com.example.test.activity;
+package com.example.plane.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
