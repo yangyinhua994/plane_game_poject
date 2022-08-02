@@ -51,7 +51,7 @@ public class Start extends TextView {
 //    敌方飞机移动距离
     private final int enemyPlaneMoveDistance = getResources().getInteger(R.integer.enemyPlaneMoveDistance);
 //    移动敌方飞机的刷新速率
-    private final int enemyPlaneMoveGenerateSpeed = getResources().getInteger(R.integer.enemyPlaneMoveGenerateSpeed) * refreshRate;
+    private int enemyPlaneMoveGenerateSpeed = getResources().getInteger(R.integer.enemyPlaneMoveGenerateSpeed) * refreshRate;
 //    子弹的刷新速率
     private final int bulletGenerateSpeed = getResources().getInteger(R.integer.bulletGenerateSpeed) * refreshRate;
 //    敌方飞机的刷新速率
@@ -158,6 +158,9 @@ public class Start extends TextView {
         setOnTouchListener(this::onTouch);
         startThread();
         bulletHeight = bulletBitmap.getHeight();
+        if (dm.heightPixels <= 900){
+            enemyPlaneMoveGenerateSpeed = enemyPlaneMoveGenerateSpeed * 2;
+        }
     }
 
     @SuppressLint({"DrawAllocation", "SetTextI18n"})
@@ -378,7 +381,14 @@ public class Start extends TextView {
             while (true) {
                 if (threadRunState){
                     sleep(bulletGenerateSpeed * refreshRate);
-                    bulletList.add(new Plane(my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f), my_plane.getY() - my_plane.getBitmap().getHeight(), bulletBitmap, 5));
+                    float bulletX;
+                    if (dm.widthPixels <= 500){
+                        bulletX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f) + 35;
+                    }else {
+                        bulletX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f) - 10;
+                    }
+                    bulletList.add(new Plane(bulletX, my_plane.getY() - my_plane.getBitmap().getHeight() - 30, bulletBitmap, 5));
+//                    bulletList.add(new Plane(my_plane.getX() + my_plane.getBitmap().getWidth() / 2f, my_plane.getY() - my_plane.getBitmap().getHeight() -10, bulletBitmap, 5));
                     for (int i = 0; i < bulletList.size(); i++) {
                         Plane plane1 = bulletList.get(i);
 //                        小于让子弹有飞出屏幕的效果
@@ -388,7 +398,7 @@ public class Start extends TextView {
                             }catch (Exception ignored){
                             }
                         } else {
-                            plane1.setY(plane1.getY() - bulletBitmap.getHeight());
+                            plane1.setY(plane1.getY() - bulletBitmap.getHeight()  + new Random().nextInt(30) + 10);
                         }
                     }
                 }
