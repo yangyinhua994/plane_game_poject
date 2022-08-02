@@ -382,14 +382,16 @@ public class Start extends TextView {
                 if (threadRunState){
                     sleep(bulletGenerateSpeed * refreshRate);
                     float bulletX;
-                    if (dm.widthPixels <= 500){
+                    int widthPixels = dm.widthPixels;
+                    if (widthPixels >= 500 && widthPixels  < 550){
                         bulletX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f) + 35;
+                    } else if (widthPixels >= 700 && widthPixels < 750){
+                        bulletX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f) +25;
                     }else {
                         bulletX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f) - 10;
                     }
                     bulletList.add(new Plane(bulletX, my_plane.getY() - my_plane.getBitmap().getHeight() - 30, bulletBitmap, 5));
-//                    bulletList.add(new Plane(my_plane.getX() + my_plane.getBitmap().getWidth() / 2f, my_plane.getY() - my_plane.getBitmap().getHeight() -10, bulletBitmap, 5));
-                    for (int i = 0; i < bulletList.size(); i++) {
+                   for (int i = 0; i < bulletList.size(); i++) {
                         Plane plane1 = bulletList.get(i);
 //                        小于让子弹有飞出屏幕的效果
                         if (plane1.getY() < bulletHeight) {

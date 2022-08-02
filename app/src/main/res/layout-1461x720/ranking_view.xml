@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+
+    <TextView
+        android:id="@+id/ranking_textview1"
+        android:layout_width="78dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="-2dp"
+        android:gravity="center"
+        android:background="@drawable/ranking4"/>
+
+    <TextView
+        android:id="@+id/ranking_textview2"
+        android:layout_width="83dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="-9dp"
+        android:gravity="center"
+        android:layout_marginStart="2dp"
+        android:background="@drawable/ranking2"/>
+
+    <TextView
+        android:id="@+id/ranking_textview3"
+        android:layout_width="wrap_content"
+        android:layout_height="47dp"
+        android:layout_gravity="top"
+        android:layout_marginTop="-9dp"
+        android:gravity="center"
+        android:layout_marginStart="2dp"
+        android:background="@drawable/ranking3"/>
+
+</LinearLayout>
