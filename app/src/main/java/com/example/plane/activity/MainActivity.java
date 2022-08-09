@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private String username;
     private boolean state = true;
     private final String TAG = this.getClass().getName();
+    private boolean DEBUG = false;
 
 
     public static void setMStatus(int i) {
@@ -48,19 +49,25 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint({"Range", "SetTextI18n","ResourceType"})
     @Override
     protected void onRestart() {
-        Log.e(TAG, "==================onRestart==================");
+        if (DEBUG){
+            Log.e(TAG, "==================onRestart==================");
+        }
         super.onRestart();
     }
 
     @Override
     protected void onStart() {
-        Log.e(TAG, "==================onStart==================");
+        if (DEBUG){
+            Log.e(TAG, "==================onStart==================");
+        }
         super.onStart();
     }
 
     @Override
     protected void onResume() {
-        Log.e(TAG, "==================onResume==================");
+        if (DEBUG){
+            Log.e(TAG, "==================onResume==================");
+        }
         super.onResume();
         if (getMStatus() != -2){
             if (state){
@@ -100,7 +107,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Log.e(TAG, "==================onPause==================");
+        if (DEBUG){
+            Log.e(TAG, "==================onPause==================");
+        }
         super.onPause();
         if (start != null && start.isThreadRunState()){
             start.saveAllList();
@@ -110,13 +119,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        Log.e(TAG, "==================onStop==================");
+        if (DEBUG){
+            Log.e(TAG, "==================onStop==================");
+        }
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        Log.e(TAG, "==================onDestroy==================");
+        if (DEBUG){
+            Log.e(TAG, "==================onDestroy==================");
+        }
         super.onDestroy();
     }
 

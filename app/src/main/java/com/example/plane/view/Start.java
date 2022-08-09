@@ -29,25 +29,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.net.ssl.ManagerFactoryParameters;
-
 @SuppressLint({"AppCompatCustomView", "ViewConstructor"})
 public class Start extends TextView {
-
-    public void setThreadRunState(boolean threadRunState) {
-        this.threadRunState = threadRunState;
-    }
-
-    public boolean isThreadRunState() {
-        return threadRunState;
-    }
-
     //    倍率
-    private int refreshRate = getResources().getInteger(R.integer.refreshRate);
+    private final int refreshRate = getResources().getInteger(R.integer.refreshRate);
 //    敌方飞机移动距离
     private final int enemyPlaneMoveDistance = getResources().getInteger(R.integer.enemyPlaneMoveDistance);
 //    移动敌方飞机的刷新速率
@@ -66,15 +54,9 @@ public class Start extends TextView {
     private final int invincibleTime = getResources().getInteger(R.integer.invincibleTime);
 //    判断爆炸的刷新速率
     private final int blastGenerateSpeed = getResources().getInteger(R.integer.blastGenerateSpeed);
-
-    public boolean isInvincible() {
-        return isInvincible;
-    }
-
     public void setInvincible(boolean invincible) {
         isInvincible = invincible;
     }
-
 //    子弹的高度
     private int bulletHeight;
 //    无敌状态
@@ -95,6 +77,14 @@ public class Start extends TextView {
     private MainActivity mainActivity;
     private final String TAG = "Start";
     private String username;
+
+    public void setThreadRunState(boolean threadRunState) {
+        this.threadRunState = threadRunState;
+    }
+
+    public boolean isThreadRunState() {
+        return threadRunState;
+    }
 
     public Start(Context context, MainActivity mainActivity) {
         super(context);
@@ -213,7 +203,8 @@ public class Start extends TextView {
                 }
                 canvas.drawBitmap(plane.getBitmap(), plane.getX(), plane.getY(), paint);
                 if (!isInvincible){
-                    if (inRange(my_plane, plane.getX(), plane.getX() + plane.getBitmap().getWidth(), plane.getY() + plane.getBitmap().getHeight())) {
+                    if (inRange(my_plane, plane.getX(), plane.getX() + plane.getBitmap().getWidth(),
+                            plane.getY() + plane.getBitmap().getHeight())) {
                         threadRunState = false;
                         Intent intent = new Intent(mainActivity, StartActivity.class);
                         Bundle bundle = new Bundle();
