@@ -1,24 +1,21 @@
 package com.example.plane.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-
+import com.example.plane.base.BaseActivity;
 import com.example.plane.sqlite.MySQLite;
 import com.example.test.R;
 import com.example.plane.adapter.RankingAdapter;
 import com.example.plane.dto.User;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class RankingActivity extends AppCompatActivity {
+public class RankingActivity extends BaseActivity {
 
     private final static String TAG = RankingActivity.class.getName();
     private final List<User> userList = new ArrayList<>();

@@ -7,23 +7,26 @@
     tools:context="com.example.plane.activity.MainActivity">
 
     <ImageView
-        android:layout_width="21dp"
-        android:layout_height="21dp"
-        android:layout_marginTop="20dp"
+        android:id="@+id/mainCloseImageView"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_marginStart="10dp"
-        android:onClick="closeOnClick"
+        android:layout_marginTop="10dp"
         android:background="@drawable/register1"
+        android:onClick="closeOnClick"
         tools:ignore="UsingOnClickInXml" />
 
+    <TextView
+        android:id="@+id/mainNullTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
     <LinearLayout
         android:id="@+id/mainLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="240dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginHorizontal="30dp"
         android:orientation="vertical">
 
 
@@ -43,7 +46,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="51dp"
+            android:layout_height="50dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/register3"
             android:onClick="onClick"

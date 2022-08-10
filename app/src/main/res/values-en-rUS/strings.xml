@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">"aircraft battle"</string>
     <string name="number">Your score is：</string>
-    <string name="restart">"restart"</string>
+    <string name="restart">startView game</string>
     <string name="revive">resurrection</string>
     <string name="save">preservation</string>
     <string name="quit">"sign out"</string>
@@ -14,7 +14,8 @@
     <string name="ranking_number">fraction</string>
     <string name="ranking_username">name</string>
     <string name="unknown_user">unknown user</string>
-    <string name="username_is_long">User name is too long  please re-enter</string>
+    <string name="username_is_long">User name is too long
+        please re-enter</string>
     <string name="save_successfully">save successfully</string>
     <string name="repeat_is_operation">"do not repeat "</string>
     <string name="quit_game">"press again to exit the game "</string>

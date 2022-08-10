@@ -3,31 +3,36 @@ package com.example.plane.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.plane.base.BaseActivity;
+import com.example.plane.utils.IntentKey;
 import com.example.test.R;
-import com.example.plane.view.Start;
+import com.example.plane.view.StartView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private long time;
-    private Start start;
-    public static int mStatus = -1;
+    private StartView startView;
+    public static int mStatus = initGameState;
     private String username;
     private boolean state = true;
     private final String TAG = this.getClass().getName();
     private boolean DEBUG = false;
-
 
     public static void setMStatus(int i) {
         mStatus = i;
@@ -43,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        state = Start.checkState(this);
+        setContentView(R.layout.activity_main);
+        state = StartView.checkState(this);
+
     }
 
     @SuppressLint({"Range", "SetTextI18n","ResourceType"})
@@ -69,40 +76,39 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "==================onResume==================");
         }
         super.onResume();
-        if (getMStatus() != -2){
+        if (getMStatus() != initState){
             if (state){
                 startActivity(new Intent(this, ContinueActivity.class));
                 state = false;
             }else {
-                if (getMStatus() == -1){
-                    setContentView(R.layout.activity_main);
-                }else if (getMStatus() == 0){
-                    start = new Start(this, this, true);
-                    reStart(start);
-                }else if(getMStatus() == 1){
-                    if (start != null){
-                        start.restartInit();
-                        reStart(start);
-                    }
-                }else if (getMStatus() == 2){
-                    buttonRestart();
-                }else if (getMStatus() == 5){
-                    if (start != null){
-                        start.deleteAllList();
-                    }
+                if (getMStatus() == initGameState){
+                    TextView mainNullTextView = findViewById(R.id.mainNullTextView);
+                    LinearLayout.LayoutParams mainNullTextViewParamsParent = new LinearLayout.LayoutParams((this.width - leftAddRight), (this.height / this.standardHeightMulti));
+                    mainNullTextViewParamsParent.setMargins(this.width / this.standardWidthMulti, ZERO, this.width / this.standardWidthMulti, ZERO);
+                    mainNullTextView.setLayoutParams(mainNullTextViewParamsParent);
+                }else if (getMStatus() == this.initData){
+                    startView = new StartView(this.getBaseContext(), this, true);
+                    reStart(startView);
+                }else if(getMStatus() == startGame){
+                    startView = new StartView(this.getBaseContext(), this);
+                    startView.restartInit();
+                    reStart(startView);
+                } else if (getMStatus() == quitGame){
+                    startView = new StartView(this.getBaseContext(), this);
+                    startView.deleteAllList();
                     finishAffinity();
-                    System.exit(0);
-                }else if (getMStatus() == 6){
+                    System.exit(this.systemOverSleepTime);
+                }else if (getMStatus() == this.errorExitStartGame){
 //                    异常关闭的重新开始
-                    start = new Start(this, this);
-                    setContentView(start);
+                    startView = new StartView(this.getBaseContext(), this);
+                    setContentView(startView);
                 }
             }
         }
-        if (start != null){
-            start.setThreadRunState(true);
+        if (startView != null){
+            startView.setThreadRunState(true);
         }
-        setMStatus(-2);
+        setMStatus(initState);
     }
 
     @Override
@@ -111,9 +117,9 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "==================onPause==================");
         }
         super.onPause();
-        if (start != null && start.isThreadRunState()){
-            start.saveAllList();
-            start.setThreadRunState(false);
+        if (startView != null && startView.isThreadRunState()){
+            startView.saveAllList();
+            startView.setThreadRunState(false);
         }
     }
 
@@ -134,11 +140,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("InflateParams")
-    public void reStart(Start start){
-        start.setMainActivity(this);
-        start.setThreadRunState(true);
-        start.setUsername(username);
-        setContentView(start);
+    public void reStart(StartView startView){
+        startView.setMainActivity(this);
+        startView.setThreadRunState(true);
+        startView.setUsername(username);
+        setContentView(startView);
     }
 
     @Override
@@ -146,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER){
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             if(inputMethodManager.isActive()){
-                inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+                inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), ZERO);
             }
             onClick(findViewById(R.id.usernameText));
             return true;
@@ -161,8 +167,11 @@ public class MainActivity extends AppCompatActivity {
         if (username.equals("")){
             username = this.getString(R.string.unknown_user);
         }
-        start = new Start(this, this);
-        reStart(start);
+        Bundle bundle = new Bundle();
+        bundle.putString(IntentKey.getInstance().username, username);
+        Intent intent = new Intent(this, StartActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     public void closeOnClick(View view) {
@@ -170,11 +179,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) { //返回键
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == this.systemOverSleepTime){
             long t=System.currentTimeMillis();//获取系统时间
             if(t-time<=500){
                 finishAffinity();
-                System.exit(0);
+                if (startView != null){
+                    startView.deleteAllList();
+                }
+                System.exit(this.systemOverSleepTime);
             }else{
                 time=t;
                 Toast.makeText(getApplicationContext(),this.getString(R.string.quit_game),Toast.LENGTH_SHORT).show();
@@ -186,22 +198,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonRestart(){
-        start.initMyPlane();
-        start.setThreadRunState(true);
-        start.setInvincible(true);
-        start.invincibleTime();
-        setContentView(start);
-    }
-
-
-    public static int dp2px(Context context, float dp){
-        float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
-
-    public static int px2dp(Context context, float px){
-        float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (px/scale + 035f);
+        startView.initMyPlane();
+        startView.setThreadRunState(true);
+        startView.setInvincible(true);
+        startView.invincibleTime();
+        setContentView(startView);
     }
 
 }
