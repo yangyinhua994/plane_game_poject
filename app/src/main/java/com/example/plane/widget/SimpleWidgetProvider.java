@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.plane.activity.RankingActivity;
 import com.example.plane.sqlite.MySQLite;
+import com.example.plane.utils.IntentKey;
 import com.example.test.R;
 
 import java.util.ArrayList;
@@ -29,7 +30,13 @@ public class SimpleWidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
         String action = intent.getAction();
         if (action.equals(CLICK_ACTION)){
-
+            RankingActivity.isAppWidget = true;
+            ComponentName cmp=new ComponentName("com.example.test", "com.example.plane.activity.RankingActivity");
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setComponent(cmp);
+            context.startActivity(intent);
         }
     }
 

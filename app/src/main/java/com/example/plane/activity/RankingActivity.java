@@ -3,12 +3,17 @@ package com.example.plane.activity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.widget.Toast;
+
 import com.example.plane.base.BaseActivity;
 import com.example.plane.sqlite.MySQLite;
+import com.example.plane.utils.IntentKey;
 import com.example.test.R;
 import com.example.plane.adapter.RankingAdapter;
 import com.example.plane.dto.User;
@@ -21,6 +26,7 @@ public class RankingActivity extends BaseActivity {
     private final List<User> userList = new ArrayList<>();
     private RecyclerView recyclerView;
     private boolean isOne;
+    public static boolean isAppWidget = false;
 
     private static boolean DEBUG = false;
 
@@ -113,5 +119,16 @@ public class RankingActivity extends BaseActivity {
         super.onDestroy();
     }
 
+    public boolean onKeyDown(int keyCode, KeyEvent event) { //返回键
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == this.systemOverSleepTime){
+            if (isAppWidget){
+                startActivity(new Intent(this, MainActivity.class));
+                isAppWidget = false;
+                MainActivity.setMStatus(BaseActivity.isAppWidget);
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

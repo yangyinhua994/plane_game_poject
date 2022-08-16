@@ -1,6 +1,5 @@
 package com.example.plane.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,8 +12,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -23,12 +20,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.example.plane.activity.MainActivity;
 import com.example.plane.activity.StartActivity;
 import com.example.plane.dto.Plane;
 import com.example.plane.sqlite.MySQLite;
+import com.example.plane.utils.IntentKey;
 import com.example.test.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -108,7 +104,6 @@ public class StartView extends TextView {
         init();
     }
 
-    @SuppressLint("Range")
     public StartView(Context context, MainActivity mainActivity, boolean b) {
         super(context);
         this.context = context;
@@ -171,7 +166,6 @@ public class StartView extends TextView {
         height = point.y;
     }
 
-    @SuppressLint({"DrawAllocation", "SetTextI18n"})
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -226,8 +220,8 @@ public class StartView extends TextView {
                         threadRunState = false;
                         Intent intent = new Intent(mainActivity, StartActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putString("username", username);
-                        bundle.putInt("index", index);
+                        bundle.putString(IntentKey.getInstance().username, username);
+                        bundle.putInt(IntentKey.getInstance().index, index);
                         intent.putExtras(bundle);
                         mainActivity.startActivity(intent);
                         my_plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blast4));

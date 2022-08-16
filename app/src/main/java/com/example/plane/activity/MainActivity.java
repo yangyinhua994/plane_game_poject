@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity {
     private String username;
     private boolean state = true;
     private final String TAG = this.getClass().getName();
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
 
     public static void setMStatus(int i) {
         mStatus = i;
@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(this, ContinueActivity.class));
                 state = false;
             }else {
-                if (getMStatus() == initGameState){
+                if (getMStatus() == initGameState || getMStatus() == isAppWidget){
                     TextView mainNullTextView = findViewById(R.id.mainNullTextView);
                     LinearLayout.LayoutParams mainNullTextViewParamsParent =
                             new LinearLayout.LayoutParams((this.width - leftAddRight),

@@ -18,6 +18,7 @@ public class BaseActivity extends Activity {
     public final int startGame = 4;
     public final int quitGame = 5;
     public final int errorExitStartGame = 6;
+    public static int isAppWidget = 7;
     public final int standardWidthMulti = 16;
     public final int leftAddRight = 60;
     public final int ZERO = 0;

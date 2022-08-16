@@ -47,7 +47,12 @@ public class StartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_main);
         if (username == null) {
-            username = (String) getIntent().getExtras().get(IntentKey.getInstance().username);
+            Object o = getIntent().getExtras().get(IntentKey.getInstance().username);
+            if (o == null){
+                username = getString(R.string.unknown_user);
+            }else {
+                username = (String) getIntent().getExtras().get(IntentKey.getInstance().username);
+            }
         }
         Object o = getIntent().getExtras().get(IntentKey.getInstance().index);
         if (o != null){
