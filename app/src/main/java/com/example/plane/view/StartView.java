@@ -273,6 +273,9 @@ public class StartView extends TextView {
     public void save() {
         MySQLite mySQLite = new MySQLite(context, "user");
         SQLiteDatabase writableDatabase = mySQLite.getWritableDatabase();
+        if (username == null || username == ""){
+            username = mainActivity.getString(R.string.unknown_user);
+        }
         String sql = "insert into user (username, number, create_time) values ( " + "'"
                 + username + "'," + index + "," + "'" + new Date(System.currentTimeMillis()) + "')";
         writableDatabase.execSQL(sql);
