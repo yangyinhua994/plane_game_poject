@@ -31,7 +31,8 @@ public class SimpleWidgetProvider extends AppWidgetProvider {
         String action = intent.getAction();
         if (action.equals(CLICK_ACTION)){
             RankingActivity.isAppWidget = true;
-            ComponentName cmp=new ComponentName("com.example.test", "com.example.plane.activity.RankingActivity");
+            ComponentName cmp=new ComponentName("com.example.test",
+                    "com.example.plane.activity.RankingActivity");
             intent.setAction(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

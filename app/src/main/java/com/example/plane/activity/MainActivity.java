@@ -108,6 +108,16 @@ public class MainActivity extends BaseActivity {
                     setContentView(startView);
                 }
             }
+        }else {
+            if (getMStatus() == isAppWidget){
+                TextView mainNullTextView = findViewById(R.id.mainNullTextView);
+                LinearLayout.LayoutParams mainNullTextViewParamsParent =
+                        new LinearLayout.LayoutParams((this.width - leftAddRight),
+                                (this.height / this.standardHeightMulti));
+                mainNullTextViewParamsParent.setMargins(this.width / this.standardWidthMulti,
+                        ZERO, this.width / this.standardWidthMulti, ZERO);
+                mainNullTextView.setLayoutParams(mainNullTextViewParamsParent);
+            }
         }
         if (startView != null){
             startView.setThreadRunState(true);

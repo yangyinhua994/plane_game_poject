@@ -128,7 +128,7 @@ public class RankingActivity extends BaseActivity {
                 return true;
             }
         }
-        return false;
+        return super.onKeyDown(keyCode, event);
     }
 
 }
