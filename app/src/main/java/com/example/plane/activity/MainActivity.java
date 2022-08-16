@@ -3,6 +3,8 @@ package com.example.plane.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,10 +22,12 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import com.example.plane.base.BaseActivity;
+import com.example.plane.sqlite.MySQLite;
 import com.example.plane.utils.IntentKey;
 import com.example.test.R;
 import com.example.plane.view.StartView;
 
+@SuppressLint("all")
 public class MainActivity extends BaseActivity {
 
     private long time;
@@ -42,9 +46,7 @@ public class MainActivity extends BaseActivity {
         return mStatus;
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.M)
-    @SuppressLint({"ClickableViewAccessibility", "InflateParams", "CutPasteId", "ResourceType"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,6 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @SuppressLint({"Range", "SetTextI18n","ResourceType"})
     @Override
     protected void onRestart() {
         if (DEBUG){
@@ -83,8 +84,11 @@ public class MainActivity extends BaseActivity {
             }else {
                 if (getMStatus() == initGameState){
                     TextView mainNullTextView = findViewById(R.id.mainNullTextView);
-                    LinearLayout.LayoutParams mainNullTextViewParamsParent = new LinearLayout.LayoutParams((this.width - leftAddRight), (this.height / this.standardHeightMulti));
-                    mainNullTextViewParamsParent.setMargins(this.width / this.standardWidthMulti, ZERO, this.width / this.standardWidthMulti, ZERO);
+                    LinearLayout.LayoutParams mainNullTextViewParamsParent =
+                            new LinearLayout.LayoutParams((this.width - leftAddRight),
+                                    (this.height / this.standardHeightMulti));
+                    mainNullTextViewParamsParent.setMargins(this.width / this.standardWidthMulti,
+                            ZERO, this.width / this.standardWidthMulti, ZERO);
                     mainNullTextView.setLayoutParams(mainNullTextViewParamsParent);
                 }else if (getMStatus() == this.initData){
                     startView = new StartView(this.getBaseContext(), this, true);
@@ -139,7 +143,6 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    @SuppressLint("InflateParams")
     public void reStart(StartView startView){
         startView.setMainActivity(this);
         startView.setThreadRunState(true);
@@ -160,7 +163,6 @@ public class MainActivity extends BaseActivity {
         return super.dispatchKeyEvent(event);
     }
 
-    @SuppressLint("Recycle")
     public void onClick(View view) {
         EditText editText = findViewById(R.id.usernameText);
         username = editText.getText().toString();

@@ -92,6 +92,10 @@ public class StartView extends TextView {
     public boolean isThreadRunState() {
         return threadRunState;
     }
+    public StartView(Context context) {
+        super(context);
+        this.context = context;
+    }
 
     public StartView(Context context, MainActivity mainActivity) {
         super(context);
@@ -492,6 +496,7 @@ public class StartView extends TextView {
         writableDatabase.close();
         sqLite.close();
     }
+
 
 
     public void setMainActivity(MainActivity mainActivity) {

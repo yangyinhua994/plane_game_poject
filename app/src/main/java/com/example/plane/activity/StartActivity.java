@@ -63,6 +63,7 @@ public class StartActivity extends BaseActivity {
         buttonRestart.setOnClickListener(v -> {
 //            开始游戏
             MainActivity.setMStatus(this.startGame);
+            save = true;
             finish();
         });
         TextView buttonSave = findViewById(R.id.buttonSave);
