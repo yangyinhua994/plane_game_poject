@@ -227,6 +227,7 @@ public class StartView extends TextView {
                         Intent intent = new Intent(mainActivity, StartActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("username", username);
+                        bundle.putInt("index", index);
                         intent.putExtras(bundle);
                         mainActivity.startActivity(intent);
                         my_plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blast4));

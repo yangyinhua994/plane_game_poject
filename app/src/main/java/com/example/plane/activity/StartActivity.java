@@ -1,13 +1,12 @@
 package com.example.plane.activity;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,11 +19,14 @@ import com.example.plane.utils.IntentKey;
 import com.example.plane.view.StartView;
 import com.example.test.R;
 
+
+@SuppressLint("all")
 public class StartActivity extends BaseActivity {
 
     private static boolean save = true;
     private static StartView startView;
     private String username;
+    private int index;
     private long time;
     private final int standardWidthMulti = 12;
     private final int standardHeightMulti = 12;
@@ -47,6 +49,10 @@ public class StartActivity extends BaseActivity {
         if (username == null) {
             username = (String) getIntent().getExtras().get(IntentKey.getInstance().username);
         }
+        Object o = getIntent().getExtras().get(IntentKey.getInstance().index);
+        if (o != null){
+            index = (int) o;
+        }
         LinearLayout parentView = findViewById(R.id.startRelativeLayout);
         LinearLayout.LayoutParams paramsParent = new LinearLayout.LayoutParams(this.width , this.height);
         parentView.setLayoutParams(paramsParent);
@@ -59,6 +65,8 @@ public class StartActivity extends BaseActivity {
         LinearLayout.LayoutParams imageViewParams = new LinearLayout.LayoutParams((this.width / gameOverImageWidthMulti), (this.height / gameOverImageHeightMulti));
         gameIcView.setLayoutParams(imageViewParams);
         TextView buttonRestart = findViewById(R.id.buttonRestart);
+        TextView textViewNumber = findViewById(R.id.textViewNumber);
+        textViewNumber.setText(getString(R.string.number) + " " + index);
         buttonRestart.setLayoutParams(buttonParams);
         buttonRestart.setOnClickListener(v -> {
 //            开始游戏
@@ -70,12 +78,16 @@ public class StartActivity extends BaseActivity {
         buttonSave.setLayoutParams(buttonParams);
         buttonSave.setOnClickListener(view -> {
             String text;
-            if (save) {
-                save = false;
-                startView.save();
-                text = this.getString(R.string.save_successfully);
-            } else {
-                text = this.getString(R.string.repeat_is_operation);
+            if (startView == null){
+                text = getString(R.string.start_game);
+            }else {
+                if (save) {
+                    save = false;
+                    startView.save();
+                    text = this.getString(R.string.save_successfully);
+                } else {
+                    text = this.getString(R.string.repeat_is_operation);
+                }
             }
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
         });
