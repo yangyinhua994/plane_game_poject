@@ -73,12 +73,13 @@ public class StartView extends TextView {
     private final int enemyPlaneRedLive = 6;
     private final int enemyPlaneBlue = 4;
     private final int enemyPlaneBlueLive = 7;
-    private final int moveSpeed = 7;
+    private final int moveSpeed = 2;
     private final int enemyPlaneMixRadom = 1;
     private final int enemyPlaneMaxRadom = 4;
     private float myPlaneInitX;
     private float myPlaneInitY;
     private int myPlaneInitBitmapType = 0;
+    private final int timerTime = 123;
 
 
     public void setInvincible(boolean invincible) {
@@ -349,15 +350,14 @@ public class StartView extends TextView {
     }
 
     public void runTimer() {
-        int time = 123;
         new Thread(){
             @Override
             public void run() {
                 super.run();
                 while (true){
-                    StartView.sleep(time);
+                    StartView.sleep(timerTime);
                     if (threadRunState){
-                        millisecond += time;
+                        millisecond += timerTime;
                     }
                 }
             }
