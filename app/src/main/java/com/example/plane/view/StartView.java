@@ -57,6 +57,13 @@ public class StartView extends TextView {
     private final int invincibleTime = getResources().getInteger(R.integer.invincibleTime);
     //    判断爆炸的刷新速率
     private final int blastGenerateSpeed = getResources().getInteger(R.integer.blastGenerateSpeed);
+    private final int textSize = 22;
+    private final int paddingLeft = 10;
+    private final int paddingTop = 10;
+    private final int paddingRight = 0;
+    private final int paddingBottm = 0;
+    private final int phoneMixheightPixels = 900;
+    private final int phoneMixheightPixelsSpeed = 2;
 
     public void setInvincible(boolean invincible) {
         isInvincible = invincible;
@@ -149,13 +156,13 @@ public class StartView extends TextView {
         bulletBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
         setBackgroundResource(R.drawable.black);
         setTextColor(Color.parseColor("#ffffff"));
-        setPadding(10, 10, 0, 0);
-        setTextSize(22);
+        setPadding(paddingLeft, paddingTop, paddingRight, paddingBottm);
+        setTextSize(textSize);
         setOnTouchListener(this::onTouch);
         startThread();
         bulletHeight = bulletBitmap.getHeight();
-        if (dm.heightPixels <= 900) {
-            enemyPlaneMoveGenerateSpeed = enemyPlaneMoveGenerateSpeed * 2;
+        if (dm.heightPixels <= phoneMixheightPixels) {
+            enemyPlaneMoveGenerateSpeed = enemyPlaneMoveGenerateSpeed * phoneMixheightPixelsSpeed;
         }
         WindowManager windowManager = mainActivity.getWindow().getWindowManager();
         Point point = new Point();
