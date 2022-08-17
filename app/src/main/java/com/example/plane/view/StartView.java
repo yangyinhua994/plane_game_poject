@@ -64,6 +64,22 @@ public class StartView extends TextView {
     private final int paddingBottm = 0;
     private final int phoneMixheightPixels = 900;
     private final int phoneMixheightPixelsSpeed = 2;
+    private final int planInitLive = 3;
+    private final int enemyPlaneYellow = 1;
+    private final int enemyPlaneYellowLive = 4;
+    private final int enemyPlaneGreen = 2;
+    private final int enemyPlaneGreenLive = 5;
+    private final int enemyPlaneRed = 3;
+    private final int enemyPlaneRedLive = 6;
+    private final int enemyPlaneBlue = 4;
+    private final int enemyPlaneBlueLive = 7;
+    private final int moveSpeed = 7;
+    private final int enemyPlaneMixRadom = 1;
+    private final int enemyPlaneMaxRadom = 4;
+    private float myPlaneInitX;
+    private float myPlaneInitY;
+    private int myPlaneInitBitmapType = 0;
+
 
     public void setInvincible(boolean invincible) {
         isInvincible = invincible;
@@ -171,6 +187,8 @@ public class StartView extends TextView {
         width = point.x;
         //屏幕实际高度（像素个数）
         height = point.y;
+        myPlaneInitX = dm.widthPixels / 2f;
+        myPlaneInitY = dm.heightPixels - 300;
     }
 
     @Override
@@ -183,7 +201,9 @@ public class StartView extends TextView {
                 for (int i1 = 0; i1 < enemyList.size(); i1++) {
                     Plane plane1 = enemyList.get(i1);
                     boolean flag;
-                    flag = inRange(plane, plane1.getX(), plane1.getX() + plane1.getBitmap().getWidth(), plane1.getY() - plane1.getBitmap().getHeight() / 2f);
+                    flag = inRange(plane, plane1.getX(),
+                            plane1.getX() + plane1.getBitmap().getWidth(),
+                            plane1.getY() - plane1.getBitmap().getHeight() / 2f);
                     if (flag) {
                         mediaPlayerBulletImpact.start();
                         try {
@@ -193,7 +213,8 @@ public class StartView extends TextView {
                             Log.e(TAG, e.toString());
                         }
                         if (plane1.getLive() == 1) {
-                            plane1.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blast4));
+                            plane1.setBitmap(BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.blast4));
                             mediaPlayerBlast.start();
                             blastList.add(plane1);
                             index++;
@@ -211,11 +232,11 @@ public class StartView extends TextView {
                 canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blast4), plane.getX(), plane.getY(), paint);
             }
             for (Plane plane : enemyList) {
-                if (plane.getBitmapType() == 1) {
+                if (plane.getBitmapType() == enemyPlaneYellow) {
                     plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.plan1));
-                } else if (plane.getBitmapType() == 2) {
+                } else if (plane.getBitmapType() == enemyPlaneGreen) {
                     plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.plan2));
-                } else if (plane.getBitmapType() == 3) {
+                } else if (plane.getBitmapType() == enemyPlaneRed) {
                     plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.plan3));
                 } else {
                     plane.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.plan4));
@@ -289,7 +310,11 @@ public class StartView extends TextView {
     }
 
     public void initMyPlane(){
-        my_plane = new Plane(dm.widthPixels / 2f, dm.heightPixels - 300, BitmapFactory.decodeResource(getResources(), R.drawable.my_plan), 0);
+        my_plane = new Plane(myPlaneInitX,
+                myPlaneInitY,
+                BitmapFactory.decodeResource(getResources(),
+                        R.drawable.my_plan),
+                myPlaneInitBitmapType);
     }
 
     public void startThread() {
@@ -435,23 +460,23 @@ public class StartView extends TextView {
             while (true) {
                 if (threadRunState) {
                     sleep(enemyPlaneGenerateSpeed * refreshRate);
-                    int i = new Random().nextInt(4) + 1;
+                    int i = new Random().nextInt(enemyPlaneMaxRadom) + enemyPlaneMixRadom;
                     Bitmap bitmap;
-                    int live = 3;
-                    if (i == 1) {
+                    int live = planInitLive;
+                    if (i == enemyPlaneYellow) {
                         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan1);
-                    } else if (i == 2) {
+                    } else if (i == enemyPlaneGreen) {
                         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan2);
-                        live = 4;
-                    } else if (i == 3) {
+                        live = enemyPlaneGreenLive;
+                    } else if (i == enemyPlaneRed) {
                         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan3);
-                        live = 5;
+                        live = enemyPlaneRedLive;
                     } else {
                         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.plan4);
-                        live = 6;
+                        live = enemyPlaneBlueLive;
                     }
                     enemyList.add(new Plane(new Random().nextInt(width - bitmap.getWidth()),
-                            -bitmap.getHeight(), bitmap, live, i, 2 * i));
+                            -bitmap.getHeight(), bitmap, live, i, moveSpeed * i));
                 }
 
             }
@@ -511,7 +536,8 @@ public class StartView extends TextView {
     public static boolean inRange(Plane plane, float minX, float maxX, float y) {
         if (y >= plane.getY() && y <= plane.getY() + plane.getBitmap().getHeight()) {
             if (plane.getX() >= minX && plane.getX() <= maxX) return true;
-            return plane.getX() + plane.getBitmap().getWidth() >= minX && plane.getX() + plane.getBitmap().getWidth() <= maxX;
+            return plane.getX() + plane.getBitmap().getWidth() >= minX && plane.getX()
+                    + plane.getBitmap().getWidth() <= maxX;
         } else {
             return false;
         }
