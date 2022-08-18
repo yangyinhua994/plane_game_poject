@@ -101,7 +101,7 @@ public class StartView extends TextView {
     private MediaPlayer mediaPlayerBlast, mediaPlayerBulletFiring, mediaPlayerBulletImpact;
     private final Context context;
     private MainActivity mainActivity;
-    private final String TAG = "Start";
+    private final String TAG = "StartView";
     private String username;
     private int width, height;
 
@@ -424,16 +424,6 @@ public class StartView extends TextView {
                     sleep(bulletGenerateSpeed * refreshRate);
                     float bulletX;
                     int widthPixels = dm.widthPixels;
-//                    if (widthPixels >= 500 && widthPixels  < 550){
-//                        bulletX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f) + 35;
-//                    } else if (widthPixels >= 700 && widthPixels < 750){
-//                        bulletX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f) +25;
-//                    }
-//                    else if (width >= 450 && width < 500){
-//                        bulletX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f) + 35;
-//                    }else {
-//                        bulletX = my_plane.getX() + (my_plane.getBitmap().getWidth() / 2f) - (bulletBitmap.getWidth() / 2f) - 10;
-//                    }
                     bulletList.add(new Plane(my_plane.getX() + (my_plane.getBitmap().getWidth() / 2 - bulletBitmap.getWidth()) / 2, my_plane.getY() - my_plane.getBitmap().getHeight() - (new Random().nextInt(30) + 10), bulletBitmap, 5));
                    for (int i = 0; i < bulletList.size(); i++) {
                         Plane plane1 = bulletList.get(i);
@@ -514,7 +504,6 @@ public class StartView extends TextView {
             writableDatabase.execSQL(sql);
             writableDatabase.close();
             sqLite.close();
-            Log.i(TAG, "数据保存成功");
         }
     }
 
